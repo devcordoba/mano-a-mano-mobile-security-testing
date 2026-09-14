@@ -42,6 +42,11 @@ public class OportunidadAdapter extends RecyclerView.Adapter<OportunidadAdapter.
         holder.textCuposFecha.setText(holder.itemView.getContext().getString(
                 R.string.cupos_y_fecha, oportunidad.getCupos(), oportunidad.getFechaActividad()));
         holder.textResumen.setText(oportunidad.getResumen());
+        holder.itemView.setOnClickListener(v -> {
+            android.content.Intent intent = new android.content.Intent(v.getContext(), com.ispc.manoamano.DetalleOportunidadActivity.class);
+            intent.putExtra("EXTRA_OPORTUNIDAD", oportunidad);
+            v.getContext().startActivity(intent);
+        });
     }
 
     @Override
