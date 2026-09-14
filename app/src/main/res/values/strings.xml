@@ -19,4 +19,11 @@
     <string name="email_contacto">contacto@manoamano.com</string>
     <string name="telefono_etiqueta">Teléfono</string>
     <string name="telefono_contacto">+54 9 11 0000-0000</string>
+    <string name="login_titulo">Iniciar sesión</string>
+    <string name="login_subtitulo">Ingresá para sumarte a una oportunidad</string>
+    <string name="login_hint_usuario">Nombre de usuario</string>
+    <string name="login_hint_password">Contraseña</string>
+    <string name="login_boton">INGRESAR</string>
+    <string name="login_campos_vacios">Por favor complete todos los campos</string>
+    <string name="login_sin_cuenta">¿No tenés cuenta? Registrate</string>
 </resources>
