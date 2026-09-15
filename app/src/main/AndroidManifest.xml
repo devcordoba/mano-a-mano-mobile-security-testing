@@ -28,7 +28,10 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="DetalleOportunidadActivity"
+            android:name=".ContactActivity"
+            android:exported="false" />
+        <activity
+            android:name=".DetalleOportunidadActivity"
             android:exported="false" />
     </application>
 
