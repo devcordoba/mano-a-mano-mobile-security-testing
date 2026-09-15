@@ -38,12 +38,12 @@ public class LoginActivity extends AppCompatActivity {
         });
 
         // TODO: descomentar cuando se mergee feature/tomas-huespe-registro
-        // tvIrRegistro.setOnClickListener(new View.OnClickListener() {
-        //     @Override
-        //     public void onClick(View v) {
-        //         startActivity(new Intent(LoginActivity.this, RegistroActivity.class));
-        //     }
-        // });
+        tvIrRegistro.setOnClickListener(new View.OnClickListener() {
+             @Override
+             public void onClick(View v) {
+                 startActivity(new Intent(LoginActivity.this, RegistroActivity.class));
+             }
+         });
     }
 
     private void iniciarSesion() {
@@ -56,7 +56,10 @@ public class LoginActivity extends AppCompatActivity {
         }
 
         Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+
         intent.putExtra(EXTRA_USUARIO, usuario);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+
         startActivity(intent);
         finish();
     }
