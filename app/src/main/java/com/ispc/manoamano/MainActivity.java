@@ -1,5 +1,6 @@
 package com.ispc.manoamano;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -181,6 +182,22 @@ public class MainActivity extends AppCompatActivity {
     private void configurarNavegacion() {
         BottomNavigationView bottomNavigation = findViewById(R.id.bottomNavigation);
         bottomNavigation.setSelectedItemId(R.id.nav_inicio);
+
+        bottomNavigation.setOnItemSelectedListener(item -> {
+            int id = item.getItemId();
+
+            // Revisa que 'nav_contacto' coincida exactamente con el id del item en tu bottom_navigation_menu.xml
+            if (id == R.id.nav_contacto) {
+                Intent intent = new Intent(MainActivity.this, ContactActivity.class);
+                startActivity(intent);
+                return true;
+            }
+
+            // Si tienes otros fragmentos o pantallas que cambian dentro de la misma actividad,
+            // puedes agregar los "else if" para nav_inicio u otras opciones aquí.
+
+            return true;
+        });
     }
 
     private void cargarOportunidades() {
