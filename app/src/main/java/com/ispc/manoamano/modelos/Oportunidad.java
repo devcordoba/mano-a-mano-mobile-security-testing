@@ -1,6 +1,6 @@
 package com.ispc.manoamano.modelos;
 
-public class Oportunidad {
+public class Oportunidad implements java.io.Serializable {
     private final int id;
     private final String titulo;
     private final String ubicacion;

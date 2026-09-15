@@ -1,0 +1,238 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+
+    android:gravity="center"
+    android:orientation="vertical"
+    android:padding="32sp"
+
+    tools:context=".RegistroActivity">
+
+    <!-- Logo -->
+
+    <!-- Titulo con subtitulo -->
+    <ImageView
+        android:id="@+id/imageLogoRegistro"
+        android:layout_width="180dp"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="6dp"
+        android:adjustViewBounds="true"
+        android:contentDescription="@string/logo_descripcion"
+        android:src="@drawable/logo"
+
+        app:layout_constraintBottom_toTopOf="@+id/TVregistroTitulo"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/TVregistroTitulo"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+
+        android:text="@string/registro_titulo"
+        android:textAlignment="center"
+        android:textColor="@color/text_primary"
+        android:textSize="26sp"
+        android:textStyle="bold"
+        android:layout_marginTop="28dp"
+        android:layout_marginBottom="4dp"
+
+        app:layout_constraintBottom_toTopOf="@+id/TVregistroHero"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <TextView
+        android:id="@+id/TVregistroHero"
+
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+
+        android:layout_marginBottom="28dp"
+        android:text="@string/registro_subtitulo"
+        android:textColor="@color/text_secondary"
+        android:textSize="14sp"
+
+        android:textAlignment="center"
+        app:layout_constraintBottom_toTopOf="@+id/linearLayout2"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <LinearLayout
+        android:id="@+id/linearLayout2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+
+        android:orientation="vertical"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.755">
+
+        <!-- Nombre de usuario -->
+        <EditText
+            android:id="@+id/ETnombre_usuario"
+
+            android:layout_width="match_parent"
+            android:layout_height="52dp"
+            android:layout_marginBottom="24dp"
+
+            android:autofillHints="username"
+
+            android:background="@drawable/input_background"
+            android:ems="11"
+            android:hint="@string/registro_username"
+            android:inputType="text"
+            android:maxLines="1"
+            android:paddingStart="16dp"
+            android:paddingEnd="16dp"
+            android:textColor="@color/text_primary"
+            android:textSize="15sp"
+
+            tools:layout_conversion_absoluteHeight="32dp"
+            tools:layout_conversion_absoluteWidth="347dp"
+            tools:layout_editor_absoluteX="32dp"
+            tools:layout_editor_absoluteY="272dp" />
+
+        <!-- Correo electronico -->
+        <EditText
+            android:id="@+id/ETemail"
+
+            android:layout_width="match_parent"
+            android:layout_height="52dp"
+            android:layout_marginBottom="24dp"
+
+            android:autofillHints="emailAddress"
+
+            android:background="@drawable/input_background"
+            android:ems="11"
+            android:hint="@string/registro_email"
+            android:inputType="textEmailAddress"
+            android:maxLines="1"
+            android:paddingStart="16dp"
+            android:paddingEnd="16dp"
+            android:textColor="@color/text_primary"
+            android:textSize="15sp"
+
+            tools:layout_conversion_absoluteHeight="32dp"
+            tools:layout_conversion_absoluteWidth="347dp"
+            tools:layout_editor_absoluteX="32dp"
+            tools:layout_editor_absoluteY="333dp" />
+
+        <!-- Contraseña -->
+        <EditText
+            android:id="@+id/ETpassword"
+
+            android:layout_width="match_parent"
+            android:layout_height="52dp"
+            android:layout_marginBottom="24dp"
+
+            android:autofillHints="password"
+
+            android:background="@drawable/input_background"
+            android:ems="11"
+            android:hint="@string/registro_password"
+            android:inputType="textPassword"
+            android:maxLines="1"
+            android:paddingStart="16dp"
+            android:paddingEnd="16dp"
+            android:textColor="@color/text_primary"
+            android:textSize="15sp"
+
+            tools:layout_conversion_absoluteHeight="32dp"
+            tools:layout_conversion_absoluteWidth="347dp"
+            tools:layout_editor_absoluteX="32dp"
+            tools:layout_editor_absoluteY="395dp" />
+
+        <!-- Campos Nombre y Apellido -->
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginBottom="24dp">
+
+            <EditText
+                android:id="@+id/ETnombre"
+
+                android:layout_width="wrap_content"
+                android:layout_height="52dp"
+
+                android:background="@drawable/input_background"
+                android:ems="11"
+                android:hint="@string/registro_nombre"
+                android:inputType="text"
+                android:maxLines="1"
+                android:paddingStart="16dp"
+                android:paddingEnd="16dp"
+                android:textColor="@color/text_primary"
+                android:textSize="15sp"
+                android:autofillHints="name"
+
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:layout_conversion_absoluteHeight="32dp"
+                tools:layout_conversion_absoluteWidth="180dp" />
+
+            <EditText
+                android:id="@+id/ETApellido"
+
+                android:layout_width="wrap_content"
+                android:layout_height="52dp"
+
+                android:background="@drawable/input_background"
+                android:ems="11"
+                android:hint="@string/registro_apellido"
+                android:inputType="text"
+                android:maxLines="1"
+                android:paddingStart="16dp"
+                android:paddingEnd="16dp"
+                android:textColor="@color/text_primary"
+                android:textSize="15sp"
+                android:autofillHints="name"
+
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                tools:layout_conversion_absoluteHeight="32dp"
+                tools:layout_conversion_absoluteWidth="52dp" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <!-- Boton crear cuenta -->
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/BTNregistrar"
+
+            android:layout_width="match_parent"
+            android:layout_height="72dp"
+            android:layout_marginTop="16dp"
+
+            android:background="@drawable/boton_primario_selector"
+            android:text="@string/registro_crear_cuenta"
+            android:textColor="@color/white"
+            android:textSize="24sp"
+
+            android:textStyle="bold" />
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/tvIrLoginRegistro"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="8dp"
+        android:text="@string/registro_con_cuenta"
+        android:textColor="@color/primary"
+        android:textSize="14sp"
+        android:layout_marginTop="32dp"
+
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/linearLayout2" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
+
