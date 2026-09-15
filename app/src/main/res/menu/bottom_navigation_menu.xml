@@ -11,7 +11,7 @@
         android:title="@string/centro" />
     <item
         android:id="@+id/nav_contacto"
-        android:enabled="false"
+        android:enabled="true"
         android:icon="@drawable/ic_contacto"
         android:title="@string/contacto" />
 </menu>

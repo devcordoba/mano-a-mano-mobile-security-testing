@@ -26,4 +26,11 @@
     <string name="login_boton">INGRESAR</string>
     <string name="login_campos_vacios">Por favor complete todos los campos</string>
     <string name="login_sin_cuenta">¿No tenés cuenta? Registrate</string>
+    <string name="contacto_titulo">Contacto</string>
+    <string name="contacto_subtitulo">Estamos para ayudarte 🤝</string>
+    <string name="contacto_descripcion">Elegí el medio que prefieras para comunicarte con nosotros. Estamos disponibles para responder tus consultas.</string>
+
+    <string name="contacto_cta_titulo">¿Querés escribirnos?</string>
+    <string name="contacto_cta_descripcion">Si necesitás más información, completá nuestro <b>formulario de contacto</b> y estaremos encantados de comunicarnos con vos a la brevedad y ayudarte.</string>
+    <string name="contacto_boton">CONTACTANOS</string>
 </resources>
