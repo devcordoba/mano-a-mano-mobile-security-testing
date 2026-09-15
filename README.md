@@ -76,6 +76,112 @@ La pantalla se encuentra integrada al flujo de navegación de la aplicación.
 
 ---
 
+## Flujo de la App
+
+```text
+┌───────────────────────────────┐
+│      INICIO DE LA APP         │
+└───────────────┬───────────────┘
+                │
+                ▼
+┌───────────────────────────────┐
+│        SPLASH ACTIVITY        │
+│        espera 3 segundos      │
+└───────────────┬───────────────┘
+                │
+                ▼
+┌──────────────────────────────────────────┐
+│              PANTALLA MAIN               │
+│                                          │
+│  Usuario: visitante                      │
+│  - Listado de oportunidades de ejemplo   │
+│  - Buscador                              │
+│  - Filtro por causa                      │
+│  - Filtro por actividad                  │
+└───────┬────────────────┬─────────────────┘
+        │                │
+        │                └── Menú inferior: Contacto
+        │                                │
+        │                                ▼
+        │               ┌─────────────────────────────┐
+        │               │          CONTACTO           │
+        │               │                             │
+        │               │  ├─ Email → app de correo   │
+        │               │  ├─ Teléfono → marcador     │
+        │               │  ├─ Mostrar formulario      │
+        │               │  └─ Enviar mensaje          │
+        │               │       │                     │
+        │               │       ├─ Campos vacíos       │
+        │               │       │   → mostrar error    │
+        │               │       │                     │
+        │               │       └─ Campos completos    │
+        │               │           → mostrar éxito   │
+        │               └──────────────┬──────────────┘
+        │                              │
+        │                         Inicio
+        │                              │
+        │                              └──────► MAIN
+        │
+        ├── Seleccionar oportunidad
+        │              │
+        │              ▼
+        │   ┌──────────────────────────────┐
+        │   │    DETALLE DE OPORTUNIDAD    │
+        │   │                              │
+        │   │  - Datos de la oportunidad   │
+        │   │  - Botón "Postularse"        │
+        │   │  - Botón "Volver"            │
+        │   └──────────┬───────────┬───────┘
+        │              │           │
+        │       Postularse       Volver
+        │              │           │
+        │              ▼           └──────────► MAIN
+        │   ┌──────────────────────────────┐
+        │   │ Mensaje: postulación enviada │
+        │   └──────────────────────────────┘
+        │
+        └── Seleccionar "Iniciar sesión"
+                       │
+                       ▼
+            ┌───────────────────────────┐
+            │           LOGIN           │
+            │                           │
+            │  Usuario                  │
+            │  Contraseña               │
+            └──────┬─────────────┬──────┘
+                   │             │
+              Ingresar       Registrarse
+                   │             │
+                   ▼             ▼
+          ┌──────────────┐  ┌──────────────────────┐
+          │ ¿Hay campos  │  │       REGISTRO       │
+          │   vacíos?    │  │                      │
+          └───┬──────┬───┘  │ - Usuario            │
+              │      │      │ - Email              │
+             Sí      No     │ - Contraseña         │
+              │      │      │ - Nombre             │
+              ▼      ▼      │ - Apellido           │
+        ┌─────────┐ ┌─────────────────────┐
+        │ Toast:  │ │ MAIN autenticado    │
+        │complete │ │                     │
+        │ campos  │ │ "Bienvenido, user"  │
+        └─────────┘ │ "Cerrar sesión" (*) │
+                    └─────────────────────┘
+                              ▲
+                              │
+                     ┌────────┴─────────┐
+                     │ ¿Registro válido?│
+                     └────┬────────┬────┘
+                          │        │
+                  Vacíos  │        │ Completos
+                          ▼        ▼
+                    ┌─────────┐  ┌────────────┐
+                    │ Toast:  │  │   LOGIN    │
+                    │complete │  └────────────┘
+                    │ campos  │
+                    └─────────┘
+```
+
 ## 🛠️ Stack Tecnológico
 
 | Componente | Detalle |

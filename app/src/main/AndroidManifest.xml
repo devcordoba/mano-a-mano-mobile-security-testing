@@ -13,7 +13,7 @@
         android:theme="@style/Theme.Manoamano"
         tools:targetApi="31">
 
-        <!-- SPLASH ACTIVITY -->
+        <!-- SPLASH -->
         <activity
             android:name=".SplashActivity"
             android:exported="true">
@@ -23,27 +23,29 @@
             </intent-filter>
         </activity>
 
+        <!-- PANTALLA PRINCIPAL -->
         <activity
-            android:name=".ContactActivity"
+            android:name=".MainActivity"
             android:exported="false" />
 
-        <activity
-            android:name=".DetalleOportunidadActivity"
-            android:exported="false" />
-
-        <!-- LOGIN ACTIVITY -->
+        <!-- LOGIN -->
         <activity
             android:name=".LoginActivity"
             android:exported="false" />
 
-        <!-- REGISTRO ACTIVITY -->
+        <!-- REGISTRO -->
         <activity
             android:name=".RegistroActivity"
             android:exported="false" />
 
-        <!-- MAIN ACTIVITY -->
+        <!-- DETALLE DE OPORTUNIDAD -->
         <activity
-            android:name=".MainActivity"
+            android:name=".MainActivity$DetalleOportunidadActivity"
+            android:exported="false" />
+
+        <!-- CONTACTO -->
+        <activity
+            android:name=".ContactActivity"
             android:exported="false" />
 
     </application>
