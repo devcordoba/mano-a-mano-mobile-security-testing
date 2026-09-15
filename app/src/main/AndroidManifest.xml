@@ -13,8 +13,7 @@
         android:theme="@style/Theme.Manoamano"
         tools:targetApi="31">
 
-        <!--  SPLASH ACTIVITY -->
-
+        <!-- SPLASH ACTIVITY -->
         <activity
             android:name=".SplashActivity"
             android:exported="true">
@@ -25,7 +24,11 @@
         </activity>
 
         <activity
-            android:name="DetalleOportunidadActivity"
+            android:name=".ContactActivity"
+            android:exported="false" />
+
+        <activity
+            android:name=".DetalleOportunidadActivity"
             android:exported="false" />
 
         <!-- LOGIN ACTIVITY -->
@@ -33,10 +36,16 @@
             android:name=".LoginActivity"
             android:exported="false" />
 
+        <!-- REGISTRO ACTIVITY -->
+        <activity
+            android:name=".RegistroActivity"
+            android:exported="false" />
+
         <!-- MAIN ACTIVITY -->
         <activity
             android:name=".MainActivity"
             android:exported="false" />
+
     </application>
 
 </manifest>
