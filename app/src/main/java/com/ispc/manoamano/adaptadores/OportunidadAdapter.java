@@ -9,6 +9,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.ispc.manoamano.MainActivity;
 import com.ispc.manoamano.R;
 import com.ispc.manoamano.modelos.Oportunidad;
 
@@ -43,7 +44,7 @@ public class OportunidadAdapter extends RecyclerView.Adapter<OportunidadAdapter.
                 R.string.cupos_y_fecha, oportunidad.getCupos(), oportunidad.getFechaActividad()));
         holder.textResumen.setText(oportunidad.getResumen());
         holder.itemView.setOnClickListener(v -> {
-            android.content.Intent intent = new android.content.Intent(v.getContext(), com.ispc.manoamano.DetalleOportunidadActivity.class);
+            android.content.Intent intent = new android.content.Intent(v.getContext(), MainActivity.DetalleOportunidadActivity.class);
             intent.putExtra("EXTRA_OPORTUNIDAD", oportunidad);
             v.getContext().startActivity(intent);
         });

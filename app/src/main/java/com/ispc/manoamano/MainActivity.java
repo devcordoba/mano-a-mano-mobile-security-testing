@@ -7,9 +7,13 @@ import android.text.TextWatcher;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -54,6 +58,12 @@ public class MainActivity extends AppCompatActivity {
         textSinResultados = findViewById(R.id.textSinResultados);
         TextView tvBienvenida = findViewById(R.id.tvBienvenida);
         RecyclerView recyclerOportunidades = findViewById(R.id.recyclerOportunidades);
+        TextView tvIniciarSesion = findViewById(R.id.tvIniciarSesion);
+
+        tvIniciarSesion.setOnClickListener(v -> {
+            Intent intent = new Intent(MainActivity.this, LoginActivity.class);
+            startActivity(intent);
+        });
 
         String nombreUsuario = null;
         if (getIntent() != null && getIntent().hasExtra("EXTRA_USUARIO")) {
@@ -64,6 +74,8 @@ public class MainActivity extends AppCompatActivity {
             tvBienvenida.setText(R.string.bienvenida_visitante);
         } else {
             tvBienvenida.setText(getString(R.string.bienvenida_usuario, nombreUsuario));
+            tvIniciarSesion.setText("Cerrar sesión");
+            tvIniciarSesion.setOnClickListener(null);
         }
 
         cargarOportunidades();
@@ -265,5 +277,60 @@ public class MainActivity extends AppCompatActivity {
 
     private int obtenerImagenAleatoria() {
         return IMAGENES_OPORTUNIDADES[random.nextInt(IMAGENES_OPORTUNIDADES.length)];
+    }
+
+    public static class DetalleOportunidadActivity extends AppCompatActivity {
+
+        private ImageView imgDetalle;
+        private TextView tvTitulo, tvOrganizacion, tvCausa, tvActividad;
+        private TextView tvUbicacion, tvDisponibilidad, tvCuposFecha, tvResumen;
+        private Button btnPostularse;
+        private ImageButton btnVolver;
+
+        @Override
+        protected void onCreate(Bundle savedInstanceState) {
+            super.onCreate(savedInstanceState);
+            setContentView(R.layout.activity_detalle_oportunidad);
+
+            initViews();
+
+            Oportunidad oportunidad = (Oportunidad) getIntent().getSerializableExtra("EXTRA_OPORTUNIDAD");
+
+            if (oportunidad != null) {
+                cargarDatos(oportunidad);
+            }
+
+            btnVolver.setOnClickListener(v -> finish());
+
+            btnPostularse.setOnClickListener(v ->
+                    Toast.makeText(this, "¡Postulación enviada con éxito!", Toast.LENGTH_SHORT).show()
+            );
+        }
+
+        private void initViews() {
+            imgDetalle = findViewById(R.id.imgDetalle);
+            tvTitulo = findViewById(R.id.tvDetalleTitulo);
+            tvOrganizacion = findViewById(R.id.tvDetalleOrganizacion);
+            tvCausa = findViewById(R.id.tvDetalleCausa);
+            tvActividad = findViewById(R.id.tvDetalleActividad);
+            tvUbicacion = findViewById(R.id.tvDetalleUbicacion);
+            tvDisponibilidad = findViewById(R.id.tvDetalleDisponibilidad);
+            tvCuposFecha = findViewById(R.id.tvDetalleCuposFecha);
+            tvResumen = findViewById(R.id.tvDetalleResumen);
+            btnPostularse = findViewById(R.id.btnPostularse);
+            btnVolver = findViewById(R.id.btnVolver);
+        }
+
+        private void cargarDatos(Oportunidad op) {
+            imgDetalle.setImageResource(op.getImagenResId());
+            tvTitulo.setText(op.getTitulo());
+            tvOrganizacion.setText(op.getOrganizacion());
+            tvCausa.setText(op.getCausa());
+            tvActividad.setText(op.getTipoActividad());
+            tvUbicacion.setText("Ubicación: " + op.getUbicacion());
+            tvDisponibilidad.setText("⏱ Disponibilidad: " + op.getDisponibilidad());
+            tvCuposFecha.setText(getString(R.string.cupos_y_fecha, op.getCupos(), op.getFechaActividad()));
+            tvResumen.setText(op.getResumen());
+        }
     }
 }
