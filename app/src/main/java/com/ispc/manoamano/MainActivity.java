@@ -192,7 +192,11 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(intent);
                 return true;
             }
-
+            if (id == R.id.nav_perfil) {
+                Intent intent = new Intent(MainActivity.this, PerfilActivity.class);
+                startActivity(intent);
+                return true;
+            }
             // Si tienes otros fragmentos o pantallas que cambian dentro de la misma actividad,
             // puedes agregar los "else if" para nav_inicio u otras opciones aquí.
 

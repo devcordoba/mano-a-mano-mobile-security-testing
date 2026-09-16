@@ -46,6 +46,10 @@
             android:name=".MainActivity"
             android:exported="false" />
 
+        <!-- PERFIL ACTIVITY -->
+        <activity
+            android:name=".PerfilActivity"
+            android:exported="false" />
     </application>
 
 </manifest>
