@@ -94,6 +94,13 @@ public class ContactActivity extends AppCompatActivity {
                 return true;
             }
 
+            if (item.getItemId() == R.id.nav_perfil) {
+                Intent intent = new Intent(this, PerfilActivity.class);
+                startActivity(intent);
+                return true;
+            }
+
+
             return false;
         });
     }

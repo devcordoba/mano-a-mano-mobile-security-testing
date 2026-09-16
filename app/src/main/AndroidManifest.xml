@@ -48,6 +48,10 @@
             android:name=".ContactActivity"
             android:exported="false" />
 
+        <!-- PERFIL ACTIVITY -->
+        <activity
+            android:name=".PerfilActivity"
+            android:exported="false" />
     </application>
 
 </manifest>
