@@ -10,7 +10,7 @@ public class PerfilActivity extends AppCompatActivity {
 
     private TextView tvNombreUsuario;
     private TextView tvEmail;
-    private Button btnCerrarSesion;
+    private Button btnEditarDatos;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -19,17 +19,14 @@ public class PerfilActivity extends AppCompatActivity {
 
         tvNombreUsuario = findViewById(R.id.tvNombreUsuario);
         tvEmail = findViewById(R.id.tvEmail);
-        btnCerrarSesion = findViewById(R.id.btnCerrarSesion);
+        btnEditarDatos = findViewById(R.id.btnEditarDatos);
 
         // Datos mock — se reemplazan por datos reales en el Sprint 2
         tvNombreUsuario.setText("Nombre Apellido");
         tvEmail.setText("usuario@ejemplo.com");
 
-        btnCerrarSesion.setOnClickListener(v -> {
-            Intent intent = new Intent(PerfilActivity.this, LoginActivity.class);
-            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
-            startActivity(intent);
-            finish();
+        btnEditarDatos.setOnClickListener(v -> {
+           //
         });
     }
 }
