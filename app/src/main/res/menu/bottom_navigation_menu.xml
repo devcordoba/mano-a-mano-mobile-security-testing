@@ -5,17 +5,12 @@
         android:icon="@drawable/ic_home"
         android:title="@string/inicio" />
     <item
-        android:id="@+id/nav_centro"
-        android:enabled="false"
-        android:icon="@drawable/ic_centro"
-        android:title="@string/centro" />
+        android:id="@+id/nav_perfil"
+        android:icon="@android:drawable/ic_menu_myplaces"
+        android:title="Perfil" />
     <item
         android:id="@+id/nav_contacto"
         android:enabled="true"
         android:icon="@drawable/ic_contacto"
         android:title="@string/contacto" />
-    <item
-        android:id="@+id/nav_perfil"
-        android:icon="@android:drawable/ic_menu_myplaces"
-        android:title="Perfil" />
 </menu>
