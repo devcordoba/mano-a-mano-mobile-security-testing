@@ -12,15 +12,42 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Manoamano"
         tools:targetApi="31">
+
+        <!-- SPLASH -->
         <activity
-            android:name=".MainActivity"
+            android:name=".SplashActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <!-- PANTALLA PRINCIPAL -->
+        <activity
+            android:name=".MainActivity"
+            android:exported="false" />
+
+        <!-- LOGIN -->
+        <activity
+            android:name=".LoginActivity"
+            android:exported="false" />
+
+        <!-- REGISTRO -->
+        <activity
+            android:name=".RegistroActivity"
+            android:exported="false" />
+
+        <!-- DETALLE DE OPORTUNIDAD -->
+        <activity
+            android:name=".MainActivity$DetalleOportunidadActivity"
+            android:exported="false" />
+
+        <!-- CONTACTO -->
+        <activity
+            android:name=".ContactActivity"
+            android:exported="false" />
+
     </application>
 
 </manifest>
