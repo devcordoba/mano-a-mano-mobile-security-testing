@@ -21,7 +21,7 @@ android {
 
     buildTypes {
         debug {
-            buildConfigField "String", "MANO_API_BASE_URL", '"https://9pd914c5-8000.usw2.devtunnels.ms/"'
+            buildConfigField "String", "MANO_API_BASE_URL", '"https://mano-a-mano.com/"' //Configurar URL de la API
         }
         release {
             minifyEnabled true
