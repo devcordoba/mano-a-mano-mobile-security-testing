@@ -2,6 +2,8 @@ plugins {
     id 'com.android.application'
 }
 
+def manoApiReleaseUrl = project.findProperty('MANO_API_BASE_URL') ?: 'https://api.manoamano.invalid/'
+
 android {
     namespace 'com.ispc.manoamano'
     compileSdk 33
@@ -14,13 +16,21 @@ android {
         versionName "1.0"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        buildConfigField "String", "MANO_API_BASE_URL", "\"${manoApiReleaseUrl}\""
     }
 
     buildTypes {
+        debug {
+            buildConfigField "String", "MANO_API_BASE_URL", '"https://9pd914c5-8000.usw2.devtunnels.ms/"'
+        }
         release {
-            minifyEnabled false
+            minifyEnabled true
+            shrinkResources true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
+    }
+    buildFeatures {
+        buildConfig true
     }
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
@@ -34,6 +44,9 @@ dependencies {
     implementation 'androidx.recyclerview:recyclerview:1.3.2'
     implementation 'com.google.android.material:material:1.8.0'
     implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
+    implementation 'com.squareup.retrofit2:retrofit:2.9.0'
+    implementation 'com.squareup.retrofit2:converter-gson:2.9.0'
+    implementation 'com.github.bumptech.glide:glide:4.16.0'
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.1.5'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'
