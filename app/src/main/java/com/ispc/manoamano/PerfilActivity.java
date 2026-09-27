@@ -1,16 +1,24 @@
 package com.ispc.manoamano;
 
-import android.content.Intent;
 import android.os.Bundle;
-import android.widget.Button;
 import android.widget.TextView;
+import android.content.Intent;
+import android.widget.Toast;
+
 import androidx.appcompat.app.AppCompatActivity;
+
+import com.ispc.manoamano.almacenamiento.SessionManager;
+import com.ispc.manoamano.modelos.PerfilResponse;
+import com.ispc.manoamano.repositorios.AuthRepository;
+import com.ispc.manoamano.utilidades.ApiCallback;
 
 public class PerfilActivity extends AppCompatActivity {
 
     private TextView tvNombreUsuario;
     private TextView tvEmail;
-    private Button btnEditarDatos;
+
+    private AuthRepository authRepository;
+    private SessionManager sessionManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -19,14 +27,62 @@ public class PerfilActivity extends AppCompatActivity {
 
         tvNombreUsuario = findViewById(R.id.tvNombreUsuario);
         tvEmail = findViewById(R.id.tvEmail);
-        btnEditarDatos = findViewById(R.id.btnEditarDatos);
 
-        // Datos mock — se reemplazan por datos reales en el Sprint 2
-        tvNombreUsuario.setText("Nombre Apellido");
-        tvEmail.setText("usuario@ejemplo.com");
+        sessionManager = new SessionManager(this);
+        authRepository = new AuthRepository(this);
 
-        btnEditarDatos.setOnClickListener(v -> {
-           //
-        });
+        if (!sessionManager.tieneSesion()) {
+            Toast.makeText(this, "Iniciá sesión para ver tu perfil.", Toast.LENGTH_SHORT).show();
+            startActivity(new Intent(this, LoginActivity.class));
+            finish();
+            return;
+        }
+
+        cargarPerfil();
+
+    }
+
+    private void cargarPerfil() {
+
+        authRepository.perfil(
+                new ApiCallback<PerfilResponse>(this) {
+
+                    @Override
+                    protected void onSuccess(
+                            PerfilResponse response
+                    ) {
+
+                        if (response.getUser() == null) {
+                            return;
+                        }
+
+                        String nombre =
+                                response.getUser().getFirstName()
+                                        + " "
+                                        + response.getUser().getLastName();
+
+                        tvNombreUsuario.setText(
+                                nombre.trim()
+                        );
+
+                        tvEmail.setText(
+                                response.getUser().getEmail()
+                        );
+
+                        String rol = response.getUser().getPerfil() == null
+                                ? null
+                                : response.getUser().getPerfil().getRol();
+
+                        sessionManager.guardarUsuario(
+                                response.getUser().getId(),
+                                response.getUser().getUsername(),
+                                response.getUser().getFirstName(),
+                                response.getUser().getLastName(),
+                                response.getUser().getEmail(),
+                                rol
+                        );
+                    }
+                }
+        );
     }
 }

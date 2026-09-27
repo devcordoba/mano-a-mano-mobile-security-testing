@@ -10,6 +10,11 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.ispc.manoamano.modelos.RegistroRequest;
+import com.ispc.manoamano.modelos.Usuario;
+import com.ispc.manoamano.repositorios.UsuarioRepository;
+import com.ispc.manoamano.utilidades.ApiCallback;
+
 public class RegistroActivity extends AppCompatActivity {
 
     private EditText etUsuario;
@@ -19,6 +24,8 @@ public class RegistroActivity extends AppCompatActivity {
     private EditText etApellido;
 
     private TextView etvIrLoginRegistro;
+
+    private UsuarioRepository usuarioRepository;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,34 +39,56 @@ public class RegistroActivity extends AppCompatActivity {
         etApellido = findViewById(R.id.ETApellido);
         etvIrLoginRegistro = findViewById(R.id.tvIrLoginRegistro);
 
-        Button btnRegistrar = findViewById(R.id.BTNregistrar);
+        Button btnRegistrar =
+                findViewById(R.id.BTNregistrar);
 
-        btnRegistrar.setOnClickListener(v -> registrarUsuario());
+        usuarioRepository =
+                new UsuarioRepository(this);
 
-        etvIrLoginRegistro.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(RegistroActivity.this, LoginActivity.class);
+        btnRegistrar.setOnClickListener(
+                v -> registrarUsuario()
+        );
 
-                intent.addFlags(
-                        Intent.FLAG_ACTIVITY_CLEAR_TOP |
-                                Intent.FLAG_ACTIVITY_SINGLE_TOP
-                );
+        etvIrLoginRegistro.setOnClickListener(
+                new View.OnClickListener() {
 
-                startActivity(intent);
-                finish();
-            }
-        });
+                    @Override
+                    public void onClick(View v) {
 
+                        Intent intent =
+                                new Intent(
+                                        RegistroActivity.this,
+                                        LoginActivity.class
+                                );
+
+                        intent.addFlags(
+                                Intent.FLAG_ACTIVITY_CLEAR_TOP |
+                                        Intent.FLAG_ACTIVITY_SINGLE_TOP
+                        );
+
+                        startActivity(intent);
+                        finish();
+                    }
+                }
+        );
     }
 
     private void registrarUsuario() {
 
-        String usuario = etUsuario.getText().toString().trim();
-        String email = etEmail.getText().toString().trim();
-        String password = etPassword.getText().toString().trim();
-        String nombre = etNombre.getText().toString().trim();
-        String apellido = etApellido.getText().toString().trim();
+        String usuario =
+                etUsuario.getText().toString().trim();
+
+        String email =
+                etEmail.getText().toString().trim();
+
+        String password =
+                etPassword.getText().toString().trim();
+
+        String nombre =
+                etNombre.getText().toString().trim();
+
+        String apellido =
+                etApellido.getText().toString().trim();
 
         if (usuario.isEmpty()
                 || email.isEmpty()
@@ -76,11 +105,45 @@ public class RegistroActivity extends AppCompatActivity {
             return;
         }
 
-        // Datos válidos: continuar con el registro
+        RegistroRequest request =
+                new RegistroRequest(
+                        usuario,
+                        email,
+                        password,
+                        nombre,
+                        apellido
+                );
 
-        Intent intent = new Intent(RegistroActivity.this, LoginActivity.class);
-        startActivity(intent);
-        finish();
+        usuarioRepository.registrar(
+                request,
+                new ApiCallback<Usuario>(this) {
 
+                    @Override
+                    protected void onSuccess(
+                            Usuario usuario
+                    ) {
+
+                        Toast.makeText(
+                                RegistroActivity.this,
+                                "Registro realizado correctamente.",
+                                Toast.LENGTH_SHORT
+                        ).show();
+
+                        Intent intent =
+                                new Intent(
+                                        RegistroActivity.this,
+                                        LoginActivity.class
+                                );
+
+                        intent.addFlags(
+                                Intent.FLAG_ACTIVITY_CLEAR_TOP |
+                                        Intent.FLAG_ACTIVITY_SINGLE_TOP
+                        );
+
+                        startActivity(intent);
+                        finish();
+                    }
+                }
+        );
     }
 }
