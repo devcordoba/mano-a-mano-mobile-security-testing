@@ -31,15 +31,16 @@ public class ContactActivity extends AppCompatActivity {
         BottomNavigationView bottomNavigation = findViewById(R.id.bottomNavigation);
 
         EditText etNombre = findViewById(R.id.editNombreContacto);
+        EditText etEmail = findViewById(R.id.editEmailContacto);
+        EditText etAsunto = findViewById(R.id.editAsuntoContacto);
         EditText etMensaje = findViewById(R.id.editMensajeContacto);
         View miFormulario = findViewById(R.id.formularioContacto);
 
         configurarContactoEmail(cardEmail);
         configurarContactoTelefono(cardTelefono);
         configurarNavegacion(bottomNavigation);
-        configurarBotonContactanos(btnContactanos);
-        configurarBotonEnviarMensaje(btnEnviar, etNombre, etMensaje, miFormulario);
-
+        configurarBotonContactanos(btnContactanos, miFormulario);
+        configurarBotonEnviarMensaje(btnEnviar, etNombre, etEmail, etAsunto, etMensaje, miFormulario);
     }
 
     private void configurarContactoEmail(LinearLayout cardEmail) {
@@ -100,14 +101,11 @@ public class ContactActivity extends AppCompatActivity {
                 return true;
             }
 
-
             return false;
         });
     }
 
-    private void configurarBotonContactanos(MaterialButton btnContactanos) {
-        View miFormulario = findViewById(R.id.formularioContacto);
-
+    private void configurarBotonContactanos(MaterialButton btnContactanos, View miFormulario) {
         btnContactanos.setOnClickListener(view -> {
             // Alterna la visibilidad del formulario
             if (miFormulario.getVisibility() == View.GONE) {
@@ -118,33 +116,72 @@ public class ContactActivity extends AppCompatActivity {
         });
     }
 
-    private void configurarBotonEnviarMensaje(MaterialButton btnEnviar, EditText etNombre, EditText etMensaje, View miFormulario) {
+    private void configurarBotonEnviarMensaje(MaterialButton btnEnviar, EditText etNombre,
+                                              EditText etEmail, EditText etAsunto,
+                                              EditText etMensaje, View miFormulario) {
         btnEnviar.setOnClickListener(view -> {
 
             String nombre = etNombre.getText().toString().trim();
+            String email = etEmail.getText().toString().trim();
+            String asunto = etAsunto.getText().toString().trim();
             String mensaje = etMensaje.getText().toString().trim();
-
 
             if (nombre.isEmpty()) {
                 etNombre.setError("Por favor, ingresá tu nombre");
+                etNombre.requestFocus();
+                return;
+            }
+
+            if (nombre.length() < 3) {
+                etNombre.setError("El nombre debe tener al menos 3 caracteres");
+                etNombre.requestFocus();
+                return;
+            }
+
+            if (email.isEmpty()) {
+                etEmail.setError("Por favor, ingresá tu email");
+                etEmail.requestFocus();
+                return;
+            }
+
+            if (!android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
+                etEmail.setError("Ingresá un email válido");
+                etEmail.requestFocus();
+                return;
+            }
+
+            if (asunto.isEmpty()) {
+                etAsunto.setError("Por favor, ingresá un asunto");
+                etAsunto.requestFocus();
+                return;
+            }
+
+            if (asunto.length() < 5) {
+                etAsunto.setError("El asunto debe tener al menos 5 caracteres");
+                etAsunto.requestFocus();
                 return;
             }
 
             if (mensaje.isEmpty()) {
                 etMensaje.setError("Por favor, escribí un mensaje");
+                etMensaje.requestFocus();
                 return;
             }
 
+            if (mensaje.length() < 10) {
+                etMensaje.setError("El mensaje debe tener al menos 10 caracteres");
+                etMensaje.requestFocus();
+                return;
+            }
 
             Toast.makeText(this, "¡Mensaje enviado con éxito! Nos contactaremos pronto.", Toast.LENGTH_LONG).show();
 
-
             etNombre.setText("");
+            etEmail.setText("");
+            etAsunto.setText("");
             etMensaje.setText("");
-
 
             miFormulario.setVisibility(View.GONE);
         });
     }
-
 }
