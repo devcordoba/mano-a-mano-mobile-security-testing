@@ -74,8 +74,23 @@ public class RegistroActivity extends AppCompatActivity {
             ).show();
 
             return;
+
+
+        }
+        if (!android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
+            etEmail.setError("Ingresá un email válido");
+            etEmail.requestFocus();
+            return;
         }
 
+        if (password.length() < 8
+                || !password.matches(".*[A-Za-z].*")
+                || !password.matches(".*\\d.*")
+                || !password.matches(".*[^A-Za-z0-9].*")) {
+            etPassword.setError("Mínimo 8 caracteres, con letras, números y un carácter especial");
+            etPassword.requestFocus();
+            return;
+        }
         // Datos válidos: continuar con el registro
 
         Intent intent = new Intent(RegistroActivity.this, LoginActivity.class);

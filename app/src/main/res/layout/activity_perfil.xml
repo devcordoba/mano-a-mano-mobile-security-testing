@@ -48,6 +48,15 @@
             android:text="usuario@ejemplo.com"
             android:textSize="14sp"
             android:textColor="#666666"
+            android:layout_marginTop="4dp"/>
+
+        <TextView
+            android:id="@+id/tvRol"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Rol"
+            android:textSize="14sp"
+            android:textColor="#7A1F3D"
             android:layout_marginTop="4dp"
             android:layout_marginBottom="40dp"/>
 
