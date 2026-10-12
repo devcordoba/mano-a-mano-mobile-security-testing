@@ -76,7 +76,7 @@
     <color name="input_borde">@color/border_strong</color>
     <color name="input_borde_foco">@color/primary</color>
     <color name="input_texto">@color/text_primary</color>
-    <color name="input_hint">@color/text_subtle</color>
+    <color name="input_hint">@color/text_secondary</color>
 
     <!-- Tarjetas -->
     <color name="card_fondo">@color/surface</color>
