@@ -22,6 +22,7 @@ import com.ispc.manoamano.adaptadores.OportunidadAdapter;
 import com.ispc.manoamano.almacenamiento.SessionManager;
 import com.ispc.manoamano.modelos.Causa;
 import com.ispc.manoamano.modelos.Oportunidad;
+
 import com.ispc.manoamano.modelos.TipoActividad;
 import com.ispc.manoamano.repositorios.CausaRepository;
 import com.ispc.manoamano.repositorios.AuthRepository;
@@ -29,6 +30,8 @@ import com.ispc.manoamano.repositorios.OportunidadRepository;
 import com.ispc.manoamano.repositorios.TipoActividadRepository;
 import com.ispc.manoamano.utilidades.ApiCallback;
 import com.ispc.manoamano.modelos.LogoutResponse;
+import com.ispc.manoamano.utilidades.NavegacionMensajes;
+
 
 import java.util.ArrayList;
 import java.util.List;
@@ -405,52 +408,52 @@ public class MainActivity extends AppCompatActivity {
         );
     }
 
-    private void configurarNavegacion() {
+    @Override
+    protected void onResume() {
+        super.onResume();
+        NavegacionMensajes.actualizar(this, findViewById(R.id.bottomNavigation), R.id.nav_inicio);
+    }
 
+    private void configurarNavegacion() {
         BottomNavigationView bottomNavigation =
-                findViewById(
-                        R.id.bottomNavigation
+                findViewById(R.id.bottomNavigation);
+
+        bottomNavigation.setSelectedItemId(R.id.nav_inicio);
+
+        bottomNavigation.setOnItemSelectedListener(item -> {
+
+            int id = item.getItemId();
+
+            // Delegar la navegación de mensajes al componente compartido.
+            if (NavegacionMensajes.manejarSeleccion(this, id)) {
+                return true;
+            }
+
+            if (id == R.id.nav_contacto) {
+
+                Intent intent = new Intent(
+                        MainActivity.this,
+                        ContactActivity.class
                 );
 
-        bottomNavigation.setSelectedItemId(
-                R.id.nav_inicio
-        );
+                startActivity(intent);
+                return true;
+            }
 
-        bottomNavigation.setOnItemSelectedListener(
-                item -> {
+            if (id == R.id.nav_perfil) {
 
-                    int id =
-                            item.getItemId();
+                Intent intent = new Intent(
+                        MainActivity.this,
+                        PerfilActivity.class
+                );
 
-                    if (id == R.id.nav_contacto) {
+                startActivity(intent);
+                return true;
+            }
 
-                        Intent intent =
-                                new Intent(
-                                        MainActivity.this,
-                                        ContactActivity.class
-                                );
+            return true;
+        });
 
-                        startActivity(intent);
-
-                        return true;
-                    }
-
-                    if (id == R.id.nav_perfil) {
-
-                        Intent intent =
-                                new Intent(
-                                        MainActivity.this,
-                                        PerfilActivity.class
-                                );
-
-                        startActivity(intent);
-
-                        return true;
-                    }
-
-                    return true;
-                }
-        );
     }
 
     private void cargarCausas() {
