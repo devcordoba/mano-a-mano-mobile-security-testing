@@ -10,6 +10,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.TextView;
 
@@ -56,6 +57,13 @@ public class MainActivity extends AppCompatActivity {
 
     private TextView textSinResultados;
 
+    private ProgressBar progressOportunidades;
+
+    // Evita mostrar "sin resultados" antes de que responda la API.
+    private boolean catalogoCargado = false;
+
+    private boolean cargando = false;
+
     private OportunidadRepository oportunidadRepository;
 
     private CausaRepository causaRepository;
@@ -90,6 +98,9 @@ public class MainActivity extends AppCompatActivity {
 
         textSinResultados =
                 findViewById(R.id.textSinResultados);
+
+        progressOportunidades =
+                findViewById(R.id.progressOportunidades);
 
         TextView tvBienvenida =
                 findViewById(R.id.tvBienvenida);
@@ -402,10 +413,34 @@ public class MainActivity extends AppCompatActivity {
         adapter.notifyDataSetChanged();
 
         textSinResultados.setVisibility(
-                oportunidadesVisibles.isEmpty()
+                catalogoCargado && !cargando && oportunidadesVisibles.isEmpty()
                         ? View.VISIBLE
                         : View.GONE
         );
+    }
+
+    // Si se cancela una búsqueda no se oculta: la nueva llamada lo vuelve a mostrar.
+    private void mostrarCargando(boolean cargando) {
+
+        this.cargando = cargando;
+
+        progressOportunidades.setVisibility(
+                cargando ? View.VISIBLE : View.GONE
+        );
+
+        if (cargando) {
+            textSinResultados.setVisibility(View.GONE);
+        }
+    }
+
+    // Ante un error se vuelve a mostrar el estado de la lista para no dejarla en blanco.
+    private void finalizarCargaConError() {
+
+        mostrarCargando(false);
+
+        catalogoCargado = true;
+
+        aplicarFiltros();
     }
 
     @Override
@@ -532,6 +567,8 @@ public class MainActivity extends AppCompatActivity {
             oportunidadCall.cancel();
         }
 
+        mostrarCargando(true);
+
         oportunidadCall = oportunidadRepository.obtenerOportunidades(
                 true,
                 busqueda,
@@ -542,6 +579,8 @@ public class MainActivity extends AppCompatActivity {
                             List<Oportunidad> oportunidades
                     ) {
 
+                        mostrarCargando(false);
+
                         todasLasOportunidades.clear();
 
                         oportunidadesVisibles.clear();
@@ -550,7 +589,19 @@ public class MainActivity extends AppCompatActivity {
                             todasLasOportunidades.addAll(oportunidades);
                         }
 
+                        catalogoCargado = true;
+
                         aplicarFiltros();
+                    }
+
+                    @Override
+                    protected void onError(int codigo) {
+                        finalizarCargaConError();
+                    }
+
+                    @Override
+                    protected void onNetworkError(Throwable t) {
+                        finalizarCargaConError();
                     }
                 }
         );
