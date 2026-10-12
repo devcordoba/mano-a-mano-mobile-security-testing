@@ -495,13 +495,11 @@ public class MainActivity extends AppCompatActivity {
 
                         adapterCausas.add("Todas");
 
-                        if (causas != null) {
-                            for (Causa causa : causas) {
+                        for (Causa causa : causas) {
 
-                                adapterCausas.add(
-                                        causa.getNombre()
-                                );
-                            }
+                            adapterCausas.add(
+                                    causa.getNombre()
+                            );
                         }
 
                         adapterCausas.notifyDataSetChanged();
@@ -528,16 +526,14 @@ public class MainActivity extends AppCompatActivity {
 
                         adapterActividades.add("Todas");
 
-                        if (tiposActividad != null) {
-                            for (
-                                    TipoActividad tipoActividad :
-                                    tiposActividad
-                            ) {
+                        for (
+                                TipoActividad tipoActividad :
+                                tiposActividad
+                        ) {
 
-                                adapterActividades.add(
-                                        tipoActividad.getNombre()
-                                );
-                            }
+                            adapterActividades.add(
+                                    tipoActividad.getNombre()
+                            );
                         }
 
                         adapterActividades.notifyDataSetChanged();

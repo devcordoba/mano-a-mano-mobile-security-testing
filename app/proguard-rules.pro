@@ -19,8 +19,3 @@
 # If you keep the line number information, uncomment this to
 # hide the original source file name.
 #-renamesourcefileattribute SourceFile
-
-# Los modelos se deserializan con Gson por reflexion y Retrofit lee las anotaciones de las interfaces.
--keepattributes Signature,*Annotation*
--keep class com.ispc.manoamano.modelos.** { *; }
--keep interface com.ispc.manoamano.api.** { *; }

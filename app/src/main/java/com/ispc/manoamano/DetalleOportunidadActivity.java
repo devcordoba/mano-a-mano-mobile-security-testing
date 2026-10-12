@@ -21,8 +21,6 @@ import com.ispc.manoamano.repositorios.OportunidadRepository;
 import com.ispc.manoamano.repositorios.PostulacionRepository;
 import com.ispc.manoamano.utilidades.ApiCallback;
 
-import retrofit2.Call;
-
 public class DetalleOportunidadActivity extends AppCompatActivity {
 
     public static final String EXTRA_OPORTUNIDAD_ID = "EXTRA_OPORTUNIDAD_ID";
@@ -43,7 +41,6 @@ public class DetalleOportunidadActivity extends AppCompatActivity {
     private OportunidadRepository oportunidadRepository;
     private PostulacionRepository postulacionRepository;
     private SessionManager sessionManager;
-    private Call<Oportunidad> detalleCall;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -85,7 +82,7 @@ public class DetalleOportunidadActivity extends AppCompatActivity {
     }
 
     private void cargarDetalle(int oportunidadId) {
-        detalleCall = oportunidadRepository.obtenerOportunidad(
+        oportunidadRepository.obtenerOportunidad(
                 oportunidadId,
                 new ApiCallback<Oportunidad>(this) {
                     @Override
@@ -161,14 +158,5 @@ public class DetalleOportunidadActivity extends AppCompatActivity {
 
     private String texto(String value) {
         return value == null ? "" : value;
-    }
-
-    // Si se sale antes de que responda la API, Glide fallaría al cargar en una Activity destruida.
-    @Override
-    protected void onDestroy() {
-        if (detalleCall != null) {
-            detalleCall.cancel();
-        }
-        super.onDestroy();
     }
 }
