@@ -48,14 +48,6 @@ public class PerfilActivity extends AppCompatActivity {
         btnEditarDatos.setOnClickListener(v ->
                 Toast.makeText(this, "Próximamente", Toast.LENGTH_SHORT).show()
         );
-        Button btnCerrarSesion = findViewById(R.id.btnCerrarSesion);
-        btnCerrarSesion.setOnClickListener(v -> {
-            sessionManager.cerrarSesion();
-            Intent intent = new Intent(this, MainActivity.class);
-            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
-            startActivity(intent);
-            finish();
-        });
         // 1) Mostramos lo que ya tenemos guardado en el celu
         mostrarDatosGuardados();
 
