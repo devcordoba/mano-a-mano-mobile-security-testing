@@ -6,6 +6,7 @@ import com.ispc.manoamano.BuildConfig;
 import com.ispc.manoamano.almacenamiento.SessionManager;
 
 import okhttp3.Interceptor;
+import okhttp3.logging.HttpLoggingInterceptor;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import retrofit2.Retrofit;
@@ -42,9 +43,17 @@ public class RetrofitClient {
                 return chain.proceed(request);
             };
 
+            HttpLoggingInterceptor loggingInterceptor =
+                    new HttpLoggingInterceptor();
+
+            loggingInterceptor.setLevel(
+                    HttpLoggingInterceptor.Level.BASIC
+            );
+
             OkHttpClient client =
                     new OkHttpClient.Builder()
                             .addInterceptor(authInterceptor)
+                            .addInterceptor(loggingInterceptor)
                             .build();
 
             retrofit = new Retrofit.Builder()
