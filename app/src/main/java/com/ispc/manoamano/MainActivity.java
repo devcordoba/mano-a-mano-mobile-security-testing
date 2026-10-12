@@ -62,6 +62,8 @@ public class MainActivity extends AppCompatActivity {
     // Evita mostrar "sin resultados" antes de que responda la API.
     private boolean catalogoCargado = false;
 
+    private boolean cargando = false;
+
     private OportunidadRepository oportunidadRepository;
 
     private CausaRepository causaRepository;
@@ -411,7 +413,7 @@ public class MainActivity extends AppCompatActivity {
         adapter.notifyDataSetChanged();
 
         textSinResultados.setVisibility(
-                catalogoCargado && oportunidadesVisibles.isEmpty()
+                catalogoCargado && !cargando && oportunidadesVisibles.isEmpty()
                         ? View.VISIBLE
                         : View.GONE
         );
@@ -420,6 +422,8 @@ public class MainActivity extends AppCompatActivity {
     // Si se cancela una búsqueda no se oculta: la nueva llamada lo vuelve a mostrar.
     private void mostrarCargando(boolean cargando) {
 
+        this.cargando = cargando;
+
         progressOportunidades.setVisibility(
                 cargando ? View.VISIBLE : View.GONE
         );
@@ -427,6 +431,16 @@ public class MainActivity extends AppCompatActivity {
         if (cargando) {
             textSinResultados.setVisibility(View.GONE);
         }
+    }
+
+    // Ante un error se vuelve a mostrar el estado de la lista para no dejarla en blanco.
+    private void finalizarCargaConError() {
+
+        mostrarCargando(false);
+
+        catalogoCargado = true;
+
+        aplicarFiltros();
     }
 
     @Override
@@ -582,12 +596,12 @@ public class MainActivity extends AppCompatActivity {
 
                     @Override
                     protected void onError(int codigo) {
-                        mostrarCargando(false);
+                        finalizarCargaConError();
                     }
 
                     @Override
                     protected void onNetworkError(Throwable t) {
-                        mostrarCargando(false);
+                        finalizarCargaConError();
                     }
                 }
         );
