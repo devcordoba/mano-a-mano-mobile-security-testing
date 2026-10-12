@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -20,6 +19,8 @@ import com.ispc.manoamano.modelos.PostulacionRequest;
 import com.ispc.manoamano.repositorios.OportunidadRepository;
 import com.ispc.manoamano.repositorios.PostulacionRepository;
 import com.ispc.manoamano.utilidades.ApiCallback;
+
+import java.util.List;
 
 public class DetalleOportunidadActivity extends AppCompatActivity {
 
@@ -37,6 +38,7 @@ public class DetalleOportunidadActivity extends AppCompatActivity {
     private TextView tvRequisitos;
     private Button btnPostularse;
     private Oportunidad oportunidad;
+    private boolean yaPostulado;
 
     private OportunidadRepository oportunidadRepository;
     private PostulacionRepository postulacionRepository;
@@ -52,8 +54,7 @@ public class DetalleOportunidadActivity extends AppCompatActivity {
         postulacionRepository = new PostulacionRepository(this);
         sessionManager = new SessionManager(this);
 
-        ImageButton btnVolver = findViewById(R.id.btnVolver);
-        btnVolver.setOnClickListener(v -> finish());
+        Volver.conectar(this);
         btnPostularse.setOnClickListener(v -> postularse());
 
         int oportunidadId = getIntent().getIntExtra(EXTRA_OPORTUNIDAD_ID, -1);
@@ -82,11 +83,13 @@ public class DetalleOportunidadActivity extends AppCompatActivity {
     }
 
     private void cargarDetalle(int oportunidadId) {
+        findViewById(R.id.rueditaDetalle).setVisibility(View.VISIBLE);
         oportunidadRepository.obtenerOportunidad(
                 oportunidadId,
                 new ApiCallback<Oportunidad>(this) {
                     @Override
                     protected void onSuccess(Oportunidad response) {
+                        findViewById(R.id.rueditaDetalle).setVisibility(View.GONE);
                         if (response == null) {
                             Toast.makeText(DetalleOportunidadActivity.this,
                                     "El servidor devolvió una respuesta vacía.", Toast.LENGTH_SHORT).show();
@@ -94,13 +97,78 @@ public class DetalleOportunidadActivity extends AppCompatActivity {
                         }
                         oportunidad = response;
                         cargarDatos(response);
-                        btnPostularse.setEnabled(response.isActiva());
+                        if (yaPostulado) {
+                            mostrarYaPostulado();
+                        } else {
+                            btnPostularse.setEnabled(response.isActiva());
+                            revisarPostulacion();
+                        }
+                    }
+
+                    @Override
+                    protected void onError(int codigo) {
+                        findViewById(R.id.rueditaDetalle).setVisibility(View.GONE);
+                    }
+
+                    @Override
+                    protected void onNetworkError(Throwable t) {
+                        findViewById(R.id.rueditaDetalle).setVisibility(View.GONE);
                     }
                 }
         );
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (oportunidad != null && !yaPostulado) {
+            revisarPostulacion();
+        }
+    }
+
+    private void revisarPostulacion() {
+        if (!sessionManager.tieneSesion() || oportunidad == null) {
+            return;
+        }
+        int oportunidadId = oportunidad.getId();
+        postulacionRepository.obtenerPorVoluntario(
+                sessionManager.obtenerUsuarioId(),
+                new ApiCallback<List<Postulacion>>(this) {
+                    @Override
+                    protected void onSuccess(List<Postulacion> body) {
+                        if (isFinishing() || body == null) {
+                            return;
+                        }
+                        for (Postulacion item : body) {
+                            if (item.getOportunidad() == oportunidadId) {
+                                mostrarYaPostulado();
+                                return;
+                            }
+                        }
+                    }
+                }
+        );
+    }
+
+    private void mostrarYaPostulado() {
+        yaPostulado = true;
+        btnPostularse.setText("Ya te postulaste. Ver postulaciones");
+        btnPostularse.setEnabled(true);
+    }
+
+    private void irAPostulaciones() {
+        Intent intent = new Intent(this, MainActivity.class);
+        intent.putExtra(MainActivity.EXTRA_ABRIR_POSTULACIONES, true);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+        startActivity(intent);
+        finish();
+    }
+
     private void postularse() {
+        if (yaPostulado) {
+            irAPostulaciones();
+            return;
+        }
         if (oportunidad == null) {
             return;
         }
@@ -117,14 +185,18 @@ public class DetalleOportunidadActivity extends AppCompatActivity {
                 new ApiCallback<Postulacion>(this) {
                     @Override
                     protected void onSuccess(Postulacion response) {
-                        btnPostularse.setText("Postulación enviada");
+                        mostrarYaPostulado();
                         Toast.makeText(DetalleOportunidadActivity.this,
                                 "¡Postulación enviada con éxito!", Toast.LENGTH_SHORT).show();
                     }
 
                     @Override
                     protected void onError(int codigo) {
-                        btnPostularse.setEnabled(true);
+                        if (codigo == 400) {
+                            mostrarYaPostulado();
+                            return;
+                        }
+                        btnPostularse.setEnabled(oportunidad != null && oportunidad.isActiva());
                     }
 
                     @Override

@@ -6,11 +6,16 @@ import android.os.Handler;
 import android.os.Looper;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewConfiguration;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ProgressBar;
+import android.widget.FrameLayout;
+import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 
@@ -18,12 +23,13 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.material.bottomsheet.BottomSheetBehavior;
+import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.ispc.manoamano.adaptadores.OportunidadAdapter;
 import com.ispc.manoamano.almacenamiento.SessionManager;
 import com.ispc.manoamano.modelos.Causa;
 import com.ispc.manoamano.modelos.Oportunidad;
-
 import com.ispc.manoamano.modelos.TipoActividad;
 import com.ispc.manoamano.repositorios.CausaRepository;
 import com.ispc.manoamano.repositorios.AuthRepository;
@@ -40,6 +46,8 @@ import java.util.List;
 import retrofit2.Call;
 
 public class MainActivity extends AppCompatActivity {
+
+    public static final String EXTRA_ABRIR_POSTULACIONES = "abrir_postulaciones";
 
     private final List<Oportunidad> todasLasOportunidades =
             new ArrayList<>();
@@ -79,6 +87,17 @@ public class MainActivity extends AppCompatActivity {
     private Runnable pendingSearch;
 
     private Call<List<Oportunidad>> oportunidadCall;
+
+    private static final int MODO_EXPLORAR = 0;
+    private static final int MODO_USUARIO = 1;
+    private static final int MODO_ORGANIZACION = 2;
+
+    private int modoActual = MODO_EXPLORAR;
+    private PanelUsuario panelUsuario;
+    private PanelOrganizacion panelOrganizacion;
+    private TextView btnModoUsuario;
+    private TextView btnModoOrganizacion;
+    private TextView tvTituloPrincipal;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -145,6 +164,8 @@ public class MainActivity extends AppCompatActivity {
 
         configurarBuscador();
 
+        configurarModo();
+
         configurarNavegacion();
 
         cargarCausas();
@@ -152,6 +173,95 @@ public class MainActivity extends AppCompatActivity {
         cargarTiposActividad();
 
         cargarOportunidades();
+        configurarBotonAyuda();
+        abrirPostulacionesSiCorresponde();
+    }
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        setIntent(intent);
+        abrirPostulacionesSiCorresponde();
+    }
+
+    private void abrirPostulacionesSiCorresponde() {
+        if (getIntent().getBooleanExtra(EXTRA_ABRIR_POSTULACIONES, false)
+                && sessionManager.tieneSesion()) {
+            mostrarModo(MODO_USUARIO);
+        }
+    }
+
+    private void configurarBotonAyuda() {
+        View fab = findViewById(R.id.fabAyuda);
+        int umbral = ViewConfiguration.get(this).getScaledTouchSlop();
+        fab.setOnTouchListener(new View.OnTouchListener() {
+            float origenX;
+            float origenY;
+            float desplazamientoX;
+            float desplazamientoY;
+            boolean arrastrando;
+
+            @Override
+            public boolean onTouch(View vista, MotionEvent evento) {
+                switch (evento.getActionMasked()) {
+                    case MotionEvent.ACTION_DOWN:
+                        desplazamientoX = vista.getX() - evento.getRawX();
+                        desplazamientoY = vista.getY() - evento.getRawY();
+                        origenX = evento.getRawX();
+                        origenY = evento.getRawY();
+                        arrastrando = false;
+                        return true;
+                    case MotionEvent.ACTION_MOVE:
+                        float deltaX = evento.getRawX() - origenX;
+                        float deltaY = evento.getRawY() - origenY;
+                        if (!arrastrando && deltaX * deltaX + deltaY * deltaY > umbral * umbral) {
+                            arrastrando = true;
+                        }
+                        if (arrastrando) {
+                            View padre = (View) vista.getParent();
+                            float x = evento.getRawX() + desplazamientoX;
+                            float y = evento.getRawY() + desplazamientoY;
+                            float maxX = padre.getWidth() - vista.getWidth();
+                            float maxY = padre.getHeight() - vista.getHeight();
+                            vista.setX(Math.max(0, Math.min(x, maxX)));
+                            vista.setY(Math.max(0, Math.min(y, maxY)));
+                        }
+                        return true;
+                    case MotionEvent.ACTION_UP:
+                        if (!arrastrando) {
+                            vista.performClick();
+                        }
+                        return true;
+                    default:
+                        return false;
+                }
+            }
+        });
+        fab.setOnClickListener(v -> mostrarAyuda());
+    }
+
+    private void mostrarAyuda() {
+        BottomSheetDialog dialog = new BottomSheetDialog(this);
+        View hoja = getLayoutInflater().inflate(R.layout.sheet_ayuda, null);
+        LinearLayout contenedor = hoja.findViewById(R.id.contenedorSecciones);
+        LayoutInflater inflater = getLayoutInflater();
+
+        for (AyudaContenido.Seccion seccion : AyudaContenido.secciones()) {
+            View item = inflater.inflate(R.layout.item_ayuda_seccion, contenedor, false);
+            ((TextView) item.findViewById(R.id.tvAyudaTitulo)).setText(seccion.titulo);
+            ((TextView) item.findViewById(R.id.tvAyudaCuerpo)).setText(seccion.cuerpo);
+            contenedor.addView(item);
+        }
+
+        dialog.setContentView(hoja);
+        dialog.setOnShowListener(d -> {
+            FrameLayout fondo = dialog.findViewById(com.google.android.material.R.id.design_bottom_sheet);
+            if (fondo != null) {
+                fondo.setBackgroundResource(android.R.color.transparent);
+                BottomSheetBehavior.from(fondo).setState(BottomSheetBehavior.STATE_EXPANDED);
+            }
+        });
+        dialog.show();
     }
 
     private void configurarBienvenida(
@@ -412,11 +522,11 @@ public class MainActivity extends AppCompatActivity {
 
         adapter.notifyDataSetChanged();
 
-        textSinResultados.setVisibility(
-                catalogoCargado && !cargando && oportunidadesVisibles.isEmpty()
-                        ? View.VISIBLE
-                        : View.GONE
-        );
+        boolean sinResultados = catalogoCargado
+                && !cargando
+                && oportunidadesVisibles.isEmpty()
+                && modoActual == MODO_EXPLORAR;
+        textSinResultados.setVisibility(sinResultados ? View.VISIBLE : View.GONE);
     }
 
     // Si se cancela una búsqueda no se oculta: la nueva llamada lo vuelve a mostrar.
@@ -455,6 +565,12 @@ public class MainActivity extends AppCompatActivity {
 
         bottomNavigation.setSelectedItemId(R.id.nav_inicio);
 
+        bottomNavigation.setOnItemReselectedListener(item -> {
+            if (item.getItemId() == R.id.nav_inicio) {
+                mostrarModo(MODO_EXPLORAR);
+            }
+        });
+
         bottomNavigation.setOnItemSelectedListener(item -> {
 
             int id = item.getItemId();
@@ -486,9 +602,63 @@ public class MainActivity extends AppCompatActivity {
                 return true;
             }
 
+            if (id == R.id.nav_inicio) {
+                mostrarModo(MODO_EXPLORAR);
+                return true;
+            }
+
             return true;
         });
+    }
 
+    private void configurarModo() {
+        panelUsuario = new PanelUsuario(this);
+        panelOrganizacion = new PanelOrganizacion(this);
+        btnModoUsuario = findViewById(R.id.btnModoUsuario);
+        btnModoOrganizacion = findViewById(R.id.btnModoOrganizacion);
+        tvTituloPrincipal = findViewById(R.id.tvTituloPrincipal);
+
+        View grupoModo = findViewById(R.id.grupoModo);
+        if (!sessionManager.tieneSesion()) {
+            grupoModo.setVisibility(View.GONE);
+            return;
+        }
+
+        grupoModo.setVisibility(View.VISIBLE);
+        btnModoUsuario.setOnClickListener(v -> mostrarModo(modoActual == MODO_USUARIO ? MODO_EXPLORAR : MODO_USUARIO));
+        btnModoOrganizacion.setOnClickListener(v -> mostrarModo(modoActual == MODO_ORGANIZACION ? MODO_EXPLORAR : MODO_ORGANIZACION));
+    }
+
+    private void mostrarModo(int modo) {
+        modoActual = modo;
+        boolean explorar = modo == MODO_EXPLORAR;
+        findViewById(R.id.grupoExplorar).setVisibility(explorar ? View.VISIBLE : View.GONE);
+        findViewById(R.id.grupoLista).setVisibility(explorar ? View.VISIBLE : View.GONE);
+        tvTituloPrincipal.setVisibility(explorar ? View.VISIBLE : View.GONE);
+        findViewById(R.id.panelUsuario).setVisibility(modo == MODO_USUARIO ? View.VISIBLE : View.GONE);
+        findViewById(R.id.panelOrganizacion).setVisibility(
+                modo == MODO_ORGANIZACION ? View.VISIBLE : View.GONE
+        );
+        if (explorar) {
+            aplicarFiltros();
+        } else {
+            textSinResultados.setVisibility(View.GONE);
+        }
+        pintarModo(btnModoUsuario, modo == MODO_USUARIO);
+        pintarModo(btnModoOrganizacion, modo == MODO_ORGANIZACION);
+        if (modo == MODO_USUARIO) {
+            panelUsuario.cargar();
+        } else if (modo == MODO_ORGANIZACION) {
+            panelOrganizacion.cargar();
+        }
+    }
+
+    private void pintarModo(TextView boton, boolean activo) {
+        if (boton == null) {
+            return;
+        }
+        boton.setBackgroundResource(activo ? R.drawable.bg_segmento_on : R.drawable.bg_segmento_off);
+        boton.setTextColor(getColor(activo ? R.color.white : R.color.primary_dark));
     }
 
     private void cargarCausas() {

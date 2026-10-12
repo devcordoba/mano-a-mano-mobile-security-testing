@@ -30,6 +30,7 @@ public class LoginActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+        Volver.conectar(this);
 
         etUsuario = findViewById(R.id.etUsuarioLogin);
         etPassword = findViewById(R.id.etPasswordLogin);
@@ -79,6 +80,7 @@ public class LoginActivity extends AppCompatActivity {
         );
 
         btnIngresar.setEnabled(false);
+        findViewById(R.id.rueditaLogin).setVisibility(View.VISIBLE);
 
         authRepository.login(
                 request,
@@ -89,6 +91,7 @@ public class LoginActivity extends AppCompatActivity {
 
                         if (response == null || response.getToken() == null || response.getUser() == null) {
                             btnIngresar.setEnabled(true);
+                            findViewById(R.id.rueditaLogin).setVisibility(View.GONE);
                             Toast.makeText(LoginActivity.this,
                                     "El servidor devolvió una respuesta inválida.", Toast.LENGTH_SHORT).show();
                             return;
@@ -123,11 +126,13 @@ public class LoginActivity extends AppCompatActivity {
                     @Override
                     protected void onError(int codigo) {
                         btnIngresar.setEnabled(true);
+                        findViewById(R.id.rueditaLogin).setVisibility(View.GONE);
                     }
 
                     @Override
                     protected void onNetworkError(Throwable t) {
                         btnIngresar.setEnabled(true);
+                        findViewById(R.id.rueditaLogin).setVisibility(View.GONE);
                     }
                 }
         );

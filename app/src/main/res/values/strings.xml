@@ -63,4 +63,14 @@
     <string name="mensajes_enviado">Mensaje enviado</string>
     <string name="mensajes_error_vacio">El mensaje no puede estar vacío.</string>
     <string name="mensajes_error_largo">El mensaje no puede superar los 1000 caracteres.</string>
+    <string name="ayuda">Ayuda</string>
+    <string name="ayuda_quienes_titulo">Quiénes somos</string>
+    <string name="ayuda_quienes_cuerpo">Mano a Mano nació de una idea simple: facilitar el encuentro entre quienes desean ayudar y quienes necesitan apoyo. Somos una plataforma de voluntariado pensada para Córdoba y alrededores, que conecta a personas y organizaciones en un mismo lugar, de manera ágil, accesible y sin intermediarios innecesarios. Nuestro objetivo es transformar la voluntad de colaborar en acciones concretas que generen un impacto positivo en la comunidad.</string>
+    <string name="ayuda_mision_titulo">Misión</string>
+    <string name="ayuda_mision_cuerpo">Centralizar las oportunidades de voluntariado en Córdoba para que encontrar una causa sea tan fácil como buscar trabajo online. Menos fricción, más acción.</string>
+    <string name="ayuda_proposito_titulo">Propósito</string>
+    <string name="ayuda_proposito_cuerpo">Darle visibilidad a las organizaciones que trabajan sin fines de lucro y reducir la brecha entre la voluntad de ayudar y la acción concreta. Sin depender de redes sociales dispersas ni de conocer a alguien que conozca a alguien.</string>
+    <string name="ayuda_porque_titulo">¿Por qué Mano a Mano?</string>
+    <string name="ayuda_porque_cuerpo">En Córdoba hay decenas de organizaciones que necesitan voluntarios y cientos de personas dispuestas a ayudar. El problema es que no se encuentran. Mano a Mano existe para resolver exactamente eso: un espacio donde las convocatorias son claras, las postulaciones son simples y la comunicación entre voluntarios y organizaciones ocurre en un mismo lugar.</string>
+
 </resources>

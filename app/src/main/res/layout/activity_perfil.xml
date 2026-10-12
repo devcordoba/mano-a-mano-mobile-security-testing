@@ -4,7 +4,12 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:background="#F5F3F0"
-    android:padding="24dp">
+    android:paddingStart="8dp"
+    android:paddingTop="8dp"
+    android:paddingEnd="24dp"
+    android:paddingBottom="24dp">
+
+    <include layout="@layout/barra_volver" />
 
     <TextView
         android:layout_width="wrap_content"
@@ -15,6 +20,14 @@
         android:textStyle="bold"
         android:layout_marginTop="16dp"
         android:layout_marginBottom="24dp"/>
+
+    <include
+        android:id="@+id/rueditaPerfil"
+        layout="@layout/ruedita"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:layout_gravity="center_horizontal"
+        android:visibility="visible" />
 
     <LinearLayout
         android:layout_width="match_parent"
