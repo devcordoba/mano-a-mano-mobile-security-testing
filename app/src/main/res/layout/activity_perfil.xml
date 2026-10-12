@@ -68,7 +68,15 @@
             android:text="Editar datos"
             android:textColor="@android:color/white"
             android:backgroundTint="#7A1F3D"/>
-
+        <Button
+            android:id="@+id/btnCerrarSesion"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:textAllCaps="false"
+            android:text="Cerrar sesión"
+            android:textColor="#7A1F3D"
+            android:backgroundTint="#F5F3F0"/>
     </LinearLayout>
 
 </LinearLayout>
