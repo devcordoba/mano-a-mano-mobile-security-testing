@@ -5,20 +5,15 @@ import com.ispc.manoamano.modelos.OportunidadGestion;
 import com.ispc.manoamano.modelos.OportunidadRequest;
 
 import java.util.List;
-import java.util.Map;
 
-import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.DELETE;
 import retrofit2.http.GET;
-import retrofit2.http.Multipart;
 import retrofit2.http.PATCH;
 import retrofit2.http.POST;
-import retrofit2.http.Part;
-import retrofit2.http.PartMap;
 import retrofit2.http.Path;
 import retrofit2.http.Query;
 
@@ -44,12 +39,8 @@ public interface OportunidadApi {
     @POST("api/oportunidades/")
     Call<OportunidadGestion> crear(@Body OportunidadRequest request);
 
-    @Multipart
     @POST("api/oportunidades/")
-    Call<OportunidadGestion> crearConImagen(
-            @PartMap Map<String, RequestBody> campos,
-            @Part MultipartBody.Part imagen
-    );
+    Call<OportunidadGestion> crearConImagen(@Body RequestBody cuerpo);
 
     @PATCH("api/oportunidades/{id}/")
     Call<OportunidadGestion> editar(
@@ -57,12 +48,10 @@ public interface OportunidadApi {
             @Body OportunidadRequest request
     );
 
-    @Multipart
     @PATCH("api/oportunidades/{id}/")
     Call<OportunidadGestion> editarConImagen(
             @Path("id") int id,
-            @PartMap Map<String, RequestBody> campos,
-            @Part MultipartBody.Part imagen
+            @Body RequestBody cuerpo
     );
 
     @DELETE("api/oportunidades/{id}/")

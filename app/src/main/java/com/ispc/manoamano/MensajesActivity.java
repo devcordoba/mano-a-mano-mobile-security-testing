@@ -61,6 +61,7 @@ public class MensajesActivity extends AppCompatActivity
     private ProgressBar progressMensajes;
     private ProgressBar progressHilo;
     private TextView textVacioMensajes;
+    private TextView textVacioHilo;
     private LinearLayout grupoBandeja;
     private LinearLayout grupoHilo;
     private TextView textHiloTitulo;
@@ -101,6 +102,7 @@ public class MensajesActivity extends AppCompatActivity
         progressMensajes = findViewById(R.id.progressMensajes);
         progressHilo = findViewById(R.id.progressHilo);
         textVacioMensajes = findViewById(R.id.textVacioMensajes);
+        textVacioHilo = findViewById(R.id.textVacioHilo);
         grupoBandeja = findViewById(R.id.grupoBandeja);
         grupoHilo = findViewById(R.id.grupoHilo);
         textHiloTitulo = findViewById(R.id.textHiloTitulo);
@@ -324,6 +326,9 @@ public class MensajesActivity extends AppCompatActivity
 
     private void mostrarCargandoHilo(boolean cargando) {
         progressHilo.setVisibility(cargando ? View.VISIBLE : View.GONE);
+        if (cargando) {
+            textVacioHilo.setVisibility(View.GONE);
+        }
     }
 
     // ==========================================
@@ -406,6 +411,7 @@ public class MensajesActivity extends AppCompatActivity
             });
         }
         hiloAdapter.mostrar(hilo);
+        textVacioHilo.setVisibility(hilo.isEmpty() ? View.VISIBLE : View.GONE);
         if (!hilo.isEmpty()) {
             recyclerHilo.scrollToPosition(hilo.size() - 1);
         }
@@ -446,11 +452,13 @@ public class MensajesActivity extends AppCompatActivity
             return;
         }
         findViewById(R.id.btnEnviarHilo).setEnabled(false);
+        mostrarCargandoHilo(true);
         mensajeRepository.enviar(
                 new MensajeRequest(hiloOtroId, hiloOportunidadId, texto.trim()),
                 new ApiCallback<Mensaje>(this) {
                     @Override
                     protected void onSuccess(Mensaje body) {
+                        mostrarCargandoHilo(false);
                         if (isFinishing() || isDestroyed()) {
                             return;
                         }
@@ -461,6 +469,7 @@ public class MensajesActivity extends AppCompatActivity
 
                     @Override
                     protected void onError(int codigo) {
+                        mostrarCargandoHilo(false);
                         if (isFinishing() || isDestroyed()) {
                             return;
                         }
@@ -472,6 +481,7 @@ public class MensajesActivity extends AppCompatActivity
 
                     @Override
                     protected void onNetworkError(Throwable t) {
+                        mostrarCargandoHilo(false);
                         if (!isFinishing() && !isDestroyed()) {
                             findViewById(R.id.btnEnviarHilo).setEnabled(true);
                         }

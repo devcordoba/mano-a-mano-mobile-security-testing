@@ -180,11 +180,15 @@ public class DetalleOportunidadActivity extends AppCompatActivity {
         }
 
         btnPostularse.setEnabled(false);
+        View rueda = findViewById(R.id.rueditaDetalle);
+        rueda.bringToFront();
+        rueda.setVisibility(View.VISIBLE);
         postulacionRepository.crear(
                 new PostulacionRequest(oportunidad.getId()),
                 new ApiCallback<Postulacion>(this) {
                     @Override
                     protected void onSuccess(Postulacion response) {
+                        findViewById(R.id.rueditaDetalle).setVisibility(View.GONE);
                         mostrarYaPostulado();
                         Toast.makeText(DetalleOportunidadActivity.this,
                                 "¡Postulación enviada con éxito!", Toast.LENGTH_SHORT).show();
@@ -192,6 +196,7 @@ public class DetalleOportunidadActivity extends AppCompatActivity {
 
                     @Override
                     protected void onError(int codigo) {
+                        findViewById(R.id.rueditaDetalle).setVisibility(View.GONE);
                         if (codigo == 400) {
                             mostrarYaPostulado();
                             return;
@@ -201,6 +206,7 @@ public class DetalleOportunidadActivity extends AppCompatActivity {
 
                     @Override
                     protected void onNetworkError(Throwable t) {
+                        findViewById(R.id.rueditaDetalle).setVisibility(View.GONE);
                         btnPostularse.setEnabled(true);
                     }
                 }

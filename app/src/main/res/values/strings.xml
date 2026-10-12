@@ -54,8 +54,9 @@
     <string name="mensajes_tab_recibidos">Recibidos</string>
     <string name="mensajes_tab_enviados">Enviados</string>
     <string name="mensajes_cargando">Cargando mensajes</string>
-    <string name="mensajes_vacio_recibidos">No tenés mensajes recibidos.</string>
-    <string name="mensajes_vacio_enviados">Todavía no enviaste mensajes.</string>
+    <string name="mensajes_vacio_recibidos">No hay mensajes recientes.</string>
+    <string name="mensajes_vacio_enviados">No hay mensajes recientes.</string>
+    <string name="mensajes_vacio_hilo">No hay mensajes recientes.</string>
     <string name="mensajes_responder_titulo">Responder a %1$s</string>
     <string name="mensajes_hint_respuesta">Escribí tu mensaje</string>
     <string name="mensajes_enviar">Enviar</string>

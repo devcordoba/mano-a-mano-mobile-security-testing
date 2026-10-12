@@ -91,6 +91,7 @@ public class PanelOrganizacion {
     private final View seccionPostulantes;
     private final View rueda;
     private int cargasActivas;
+    private boolean accionEnCurso;
     private final ImageView imgPubPreview;
     private final TextView textPubImagen;
     private final TextView btnQuitarImagen;
@@ -100,6 +101,7 @@ public class PanelOrganizacion {
     private int editandoId = -1;
     private boolean editandoActiva = true;
     private boolean editandoTieneImagen;
+    private String editandoVersion;
     private File imagenArchivo;
     private String imagenTipo;
     private int causaPendiente = -1;
@@ -191,6 +193,18 @@ public class PanelOrganizacion {
             return;
         }
         cargasActivas--;
+        if (cargasActivas == 0 && !accionEnCurso) {
+            rueda.setVisibility(View.GONE);
+        }
+    }
+
+    private void mostrarAccion(boolean activa) {
+        accionEnCurso = activa;
+        if (activa) {
+            rueda.bringToFront();
+            rueda.setVisibility(View.VISIBLE);
+            return;
+        }
         if (cargasActivas == 0) {
             rueda.setVisibility(View.GONE);
         }
@@ -292,15 +306,27 @@ public class PanelOrganizacion {
                 valor(editTelefono),
                 sitio
         );
+        mostrarAccion(true);
         ApiCallback<Organizacion> callback = new ApiCallback<Organizacion>(activity) {
             @Override
             protected void onSuccess(Organizacion body) {
+                mostrarAccion(false);
                 if (activity.isFinishing()) {
                     return;
                 }
                 organizacion = body;
                 mostrarOrganizacion();
                 Toast.makeText(activity, "Organización guardada.", Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            protected void onError(int codigo) {
+                mostrarAccion(false);
+            }
+
+            @Override
+            protected void onNetworkError(Throwable t) {
+                mostrarAccion(false);
             }
         };
         if (organizacion == null) {
@@ -318,21 +344,33 @@ public class PanelOrganizacion {
                 .setTitle("Eliminar organización")
                 .setMessage("Se va a borrar tu organización y sus ofertas. Esta acción no se puede deshacer.")
                 .setNegativeButton("Cancelar", null)
-                .setPositiveButton("Eliminar", (d, w) ->
-                        organizaciones.eliminar(organizacion.getId(), new ApiCallback<Void>(activity) {
-                            @Override
-                            protected void onSuccess(Void body) {
-                                if (activity.isFinishing()) {
-                                    return;
-                                }
-                                organizacion = null;
-                                mostrarOrganizacion();
-                                cargarPublicaciones();
-                                cargarPostulantes();
-                                Toast.makeText(activity, "Organización eliminada.", Toast.LENGTH_SHORT).show();
+                .setPositiveButton("Eliminar", (d, w) -> {
+                    mostrarAccion(true);
+                    organizaciones.eliminar(organizacion.getId(), new ApiCallback<Void>(activity) {
+                        @Override
+                        protected void onSuccess(Void body) {
+                            mostrarAccion(false);
+                            if (activity.isFinishing()) {
+                                return;
                             }
-                        })
-                )
+                            organizacion = null;
+                            mostrarOrganizacion();
+                            cargarPublicaciones();
+                            cargarPostulantes();
+                            Toast.makeText(activity, "Organización eliminada.", Toast.LENGTH_SHORT).show();
+                        }
+
+                        @Override
+                        protected void onError(int codigo) {
+                            mostrarAccion(false);
+                        }
+
+                        @Override
+                        protected void onNetworkError(Throwable t) {
+                            mostrarAccion(false);
+                        }
+                    });
+                })
                 .show();
     }
 
@@ -379,9 +417,11 @@ public class PanelOrganizacion {
                 null,
                 editandoActiva
         );
+        mostrarAccion(true);
         ApiCallback<OportunidadGestion> callback = new ApiCallback<OportunidadGestion>(activity) {
             @Override
             protected void onSuccess(OportunidadGestion body) {
+                mostrarAccion(false);
                 if (activity.isFinishing()) {
                     return;
                 }
@@ -389,6 +429,16 @@ public class PanelOrganizacion {
                 cargarPublicaciones();
                 mostrarSeccion(SEC_OFERTAS);
                 Toast.makeText(activity, "Oferta guardada.", Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            protected void onError(int codigo) {
+                mostrarAccion(false);
+            }
+
+            @Override
+            protected void onNetworkError(Throwable t) {
+                mostrarAccion(false);
             }
         };
         if (imagenArchivo != null) {
@@ -474,8 +524,12 @@ public class PanelOrganizacion {
         if (!base.endsWith("/")) {
             base = base + "/";
         }
+        String url = base + "api/oportunidades/" + id + "/imagen/";
+        if (editandoVersion != null && !editandoVersion.isEmpty()) {
+            url = url + "?v=" + Uri.encode(editandoVersion);
+        }
         Glide.with(activity)
-                .load(base + "api/oportunidades/" + id + "/imagen/")
+                .load(url)
                 .into(imgPubPreview);
         imgPubPreview.setVisibility(View.VISIBLE);
         textPubImagen.setText("Imagen actual. Elegí otra para cambiarla.");
@@ -498,9 +552,10 @@ public class PanelOrganizacion {
         editUbicacion.setText("");
         editDisponibilidad.setText("");
         editCupos.setText("");
-        btnPublicar.setText("Publicar");
+        btnPublicar.setText("Publicar oferta");
         btnCancelarPublicacion.setVisibility(View.GONE);
         editandoTieneImagen = false;
+        editandoVersion = null;
         quitarImagenElegida();
     }
 
@@ -567,6 +622,7 @@ public class PanelOrganizacion {
         btnPublicar.setText("Guardar cambios");
         btnCancelarPublicacion.setVisibility(View.VISIBLE);
         editandoTieneImagen = item.isTieneImagen();
+        editandoVersion = item.getUpdatedAt();
         borrarImagenTemporal();
         imagenArchivo = null;
         imagenTipo = null;
@@ -601,12 +657,30 @@ public class PanelOrganizacion {
                 fecha,
                 !item.isActiva()
         );
+        mostrarAccion(true);
         oportunidades.editar(item.getId(), request, new ApiCallback<OportunidadGestion>(activity) {
             @Override
             protected void onSuccess(OportunidadGestion body) {
-                if (!activity.isFinishing()) {
-                    cargarPublicaciones();
+                mostrarAccion(false);
+                if (activity.isFinishing()) {
+                    return;
                 }
+                Toast.makeText(
+                        activity,
+                        item.isActiva() ? "Oferta pausada." : "Oferta activa.",
+                        Toast.LENGTH_SHORT
+                ).show();
+                cargarPublicaciones();
+            }
+
+            @Override
+            protected void onError(int codigo) {
+                mostrarAccion(false);
+            }
+
+            @Override
+            protected void onNetworkError(Throwable t) {
+                mostrarAccion(false);
             }
         });
     }
@@ -615,21 +689,33 @@ public class PanelOrganizacion {
         new AlertDialog.Builder(activity)
                 .setMessage("¿Eliminar esta publicación?")
                 .setNegativeButton("Cancelar", null)
-                .setPositiveButton("Eliminar", (d, w) ->
-                        oportunidades.eliminar(id, new ApiCallback<Void>(activity) {
-                            @Override
-                            protected void onSuccess(Void body) {
-                                if (activity.isFinishing()) {
-                                    return;
-                                }
-                                if (editandoId == id) {
-                                    limpiarPublicacion();
-                                }
-                                cargarPublicaciones();
-                                cargarPostulantes();
+                .setPositiveButton("Eliminar", (d, w) -> {
+                    mostrarAccion(true);
+                    oportunidades.eliminar(id, new ApiCallback<Void>(activity) {
+                        @Override
+                        protected void onSuccess(Void body) {
+                            mostrarAccion(false);
+                            if (activity.isFinishing()) {
+                                return;
                             }
-                        })
-                )
+                            if (editandoId == id) {
+                                limpiarPublicacion();
+                            }
+                            cargarPublicaciones();
+                            cargarPostulantes();
+                        }
+
+                        @Override
+                        protected void onError(int codigo) {
+                            mostrarAccion(false);
+                        }
+
+                        @Override
+                        protected void onNetworkError(Throwable t) {
+                            mostrarAccion(false);
+                        }
+                    });
+                })
                 .show();
     }
 
@@ -706,16 +792,28 @@ public class PanelOrganizacion {
                 if (pos < 0 || pos >= ESTADOS.length) {
                     return;
                 }
+                mostrarAccion(true);
                 postulaciones.editarEstado(
                         item.getId(),
                         new PostulacionRequest(ESTADOS[pos]),
                         new ApiCallback<Postulacion>(activity) {
                             @Override
                             protected void onSuccess(Postulacion body) {
+                                mostrarAccion(false);
                                 if (!activity.isFinishing()) {
                                     Toast.makeText(activity, "Estado actualizado.", Toast.LENGTH_SHORT).show();
                                     cargarPostulantes();
                                 }
+                            }
+
+                            @Override
+                            protected void onError(int codigo) {
+                                mostrarAccion(false);
+                            }
+
+                            @Override
+                            protected void onNetworkError(Throwable t) {
+                                mostrarAccion(false);
                             }
                         }
                 );

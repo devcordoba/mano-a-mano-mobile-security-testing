@@ -61,9 +61,14 @@
             android:background="@drawable/boton_primario"
             android:clickable="true"
             android:focusable="true"
+            android:ellipsize="end"
             android:gravity="center"
-            android:text="Escribir a una postulación"
+            android:maxLines="1"
+            android:paddingStart="12dp"
+            android:paddingEnd="12dp"
+            android:text="Contactar organización"
             android:textColor="@color/white"
+            android:textSize="14sp"
             android:textStyle="bold"
             android:visibility="gone" />
 
@@ -148,7 +153,30 @@
                 android:layout_width="48dp"
                 android:layout_height="48dp"
                 android:layout_gravity="center" />
+
+            <TextView
+                android:id="@+id/textVacioHilo"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:padding="24dp"
+                android:text="@string/mensajes_vacio_hilo"
+                android:textAlignment="center"
+                android:textColor="@color/text_secondary"
+                android:textSize="16sp"
+                android:visibility="gone" />
         </FrameLayout>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingStart="16dp"
+            android:paddingTop="4dp"
+            android:paddingEnd="16dp"
+            android:text="Mensaje"
+            android:textColor="@color/text_secondary"
+            android:textSize="13sp"
+            android:textStyle="bold" />
 
         <LinearLayout
             android:layout_width="match_parent"

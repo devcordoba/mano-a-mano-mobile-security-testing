@@ -28,7 +28,7 @@
                 android:gravity="center"
                 android:paddingStart="14dp"
                 android:paddingEnd="14dp"
-                android:text="Datos"
+                android:text="Mi organización"
                 android:textColor="@color/white"
                 android:textSize="13sp"
                 android:textStyle="bold" />
@@ -44,7 +44,7 @@
                 android:gravity="center"
                 android:paddingStart="14dp"
                 android:paddingEnd="14dp"
-                android:text="Publicar"
+                android:text="Publicar oferta"
                 android:textColor="@color/primary_dark"
                 android:textSize="13sp"
                 android:textStyle="bold" />
@@ -108,11 +108,19 @@
                     android:textSize="22sp"
                     android:textStyle="bold" />
 
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="12dp"
+                    android:text="Nombre público"
+                    android:textColor="@color/text_secondary"
+                    android:textStyle="bold" />
+
                 <EditText
                     android:id="@+id/editOrgNombre"
                     android:layout_width="match_parent"
                     android:layout_height="40dp"
-                    android:layout_marginTop="12dp"
+                    android:layout_marginTop="4dp"
                     android:background="@drawable/input_background"
                     android:hint="Nombre público"
                     android:inputType="textCapWords"
@@ -120,11 +128,19 @@
                     android:paddingEnd="12dp"
                     android:textSize="14sp" />
 
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:text="Email de contacto"
+                    android:textColor="@color/text_secondary"
+                    android:textStyle="bold" />
+
                 <EditText
                     android:id="@+id/editOrgEmail"
                     android:layout_width="match_parent"
                     android:layout_height="40dp"
-                    android:layout_marginTop="8dp"
+                    android:layout_marginTop="4dp"
                     android:background="@drawable/input_background"
                     android:hint="Email de contacto"
                     android:inputType="textEmailAddress"
@@ -132,11 +148,19 @@
                     android:paddingEnd="12dp"
                     android:textSize="14sp" />
 
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:text="Descripción"
+                    android:textColor="@color/text_secondary"
+                    android:textStyle="bold" />
+
                 <EditText
                     android:id="@+id/editOrgDescripcion"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
+                    android:layout_marginTop="4dp"
                     android:background="@drawable/input_background"
                     android:gravity="top"
                     android:hint="Descripción"
@@ -145,11 +169,19 @@
                     android:padding="12dp"
                     android:textSize="14sp" />
 
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:text="Teléfono (opcional)"
+                    android:textColor="@color/text_secondary"
+                    android:textStyle="bold" />
+
                 <EditText
                     android:id="@+id/editOrgTelefono"
                     android:layout_width="match_parent"
                     android:layout_height="40dp"
-                    android:layout_marginTop="8dp"
+                    android:layout_marginTop="4dp"
                     android:background="@drawable/input_background"
                     android:hint="Teléfono (opcional)"
                     android:inputType="phone"
@@ -157,11 +189,19 @@
                     android:paddingEnd="12dp"
                     android:textSize="14sp" />
 
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:text="Sitio web (opcional)"
+                    android:textColor="@color/text_secondary"
+                    android:textStyle="bold" />
+
                 <EditText
                     android:id="@+id/editOrgSitio"
                     android:layout_width="match_parent"
                     android:layout_height="40dp"
-                    android:layout_marginTop="8dp"
+                    android:layout_marginTop="4dp"
                     android:background="@drawable/input_background"
                     android:hint="Sitio web (opcional)"
                     android:inputType="textUri"
@@ -219,11 +259,19 @@
                     android:textSize="22sp"
                     android:textStyle="bold" />
 
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="12dp"
+                    android:text="Título"
+                    android:textColor="@color/text_secondary"
+                    android:textStyle="bold" />
+
                 <EditText
                     android:id="@+id/editPubTitulo"
                     android:layout_width="match_parent"
                     android:layout_height="40dp"
-                    android:layout_marginTop="12dp"
+                    android:layout_marginTop="4dp"
                     android:background="@drawable/input_background"
                     android:hint="Título"
                     android:inputType="textCapSentences"
@@ -231,11 +279,19 @@
                     android:paddingEnd="12dp"
                     android:textSize="14sp" />
 
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:text="Descripción"
+                    android:textColor="@color/text_secondary"
+                    android:textStyle="bold" />
+
                 <EditText
                     android:id="@+id/editPubDescripcion"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
+                    android:layout_marginTop="4dp"
                     android:background="@drawable/input_background"
                     android:gravity="top"
                     android:hint="Descripción"
@@ -244,11 +300,19 @@
                     android:padding="12dp"
                     android:textSize="14sp" />
 
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:text="Ubicación"
+                    android:textColor="@color/text_secondary"
+                    android:textStyle="bold" />
+
                 <EditText
                     android:id="@+id/editPubUbicacion"
                     android:layout_width="match_parent"
                     android:layout_height="40dp"
-                    android:layout_marginTop="8dp"
+                    android:layout_marginTop="4dp"
                     android:background="@drawable/input_background"
                     android:hint="Ubicación"
                     android:inputType="textCapWords"
@@ -256,11 +320,19 @@
                     android:paddingEnd="12dp"
                     android:textSize="14sp" />
 
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:text="Disponibilidad"
+                    android:textColor="@color/text_secondary"
+                    android:textStyle="bold" />
+
                 <EditText
                     android:id="@+id/editPubDisponibilidad"
                     android:layout_width="match_parent"
                     android:layout_height="40dp"
-                    android:layout_marginTop="8dp"
+                    android:layout_marginTop="4dp"
                     android:background="@drawable/input_background"
                     android:hint="Disponibilidad"
                     android:inputType="textCapSentences"
@@ -268,11 +340,19 @@
                     android:paddingEnd="12dp"
                     android:textSize="14sp" />
 
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:text="Cupos"
+                    android:textColor="@color/text_secondary"
+                    android:textStyle="bold" />
+
                 <EditText
                     android:id="@+id/editPubCupos"
                     android:layout_width="match_parent"
                     android:layout_height="40dp"
-                    android:layout_marginTop="8dp"
+                    android:layout_marginTop="4dp"
                     android:background="@drawable/input_background"
                     android:hint="Cupos"
                     android:inputType="number"
@@ -307,6 +387,14 @@
                     android:layout_width="match_parent"
                     android:layout_height="40dp"
                     android:background="@drawable/input_background" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:text="Imagen"
+                    android:textColor="@color/text_secondary"
+                    android:textStyle="bold" />
 
                 <ImageView
                     android:id="@+id/imgPubPreview"
@@ -371,7 +459,7 @@
                     android:clickable="true"
                     android:focusable="true"
                     android:gravity="center"
-                    android:text="Publicar"
+                    android:text="Publicar oferta"
                     android:textColor="@color/white"
                     android:textStyle="bold" />
 

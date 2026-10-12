@@ -10,8 +10,6 @@ import com.ispc.manoamano.modelos.OportunidadRequest;
 
 import java.io.File;
 import java.util.List;
-import java.util.LinkedHashMap;
-import java.util.Map;
 
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
@@ -93,8 +91,7 @@ public class OportunidadRepository {
             Callback<OportunidadGestion> callback
     ) {
         Call<OportunidadGestion> call = oportunidadApi.crearConImagen(
-                construirCampos(request),
-                construirImagen(imagen, contentType)
+                construirCuerpo(request, imagen, contentType)
         );
         call.enqueue(callback);
         return call;
@@ -119,8 +116,7 @@ public class OportunidadRepository {
     ) {
         Call<OportunidadGestion> call = oportunidadApi.editarConImagen(
                 id,
-                construirCampos(request),
-                construirImagen(imagen, contentType)
+                construirCuerpo(request, imagen, contentType)
         );
         call.enqueue(callback);
         return call;
@@ -138,41 +134,38 @@ public class OportunidadRepository {
         return call;
     }
 
-    private Map<String, RequestBody> construirCampos(OportunidadRequest request) {
-        Map<String, RequestBody> campos = new LinkedHashMap<>();
-        agregarCampo(campos, "organizacion", request.getOrganizacion());
-        agregarCampo(campos, "titulo", request.getTitulo());
-        agregarCampo(campos, "descripcion", request.getDescripcion());
-        agregarCampo(campos, "ubicacion", request.getUbicacion());
-        agregarCampo(campos, "causa", request.getCausa());
-        agregarCampo(campos, "tipo_actividad", request.getTipoActividad());
-        agregarCampo(campos, "disponibilidad", request.getDisponibilidad());
-        agregarCampo(campos, "requisitos", request.getRequisitos());
-        agregarCampo(campos, "cupos", request.getCupos());
-        agregarCampo(campos, "fecha_actividad", request.getFechaActividad());
-        agregarCampo(campos, "activa", request.isActiva());
-        return campos;
-    }
-
-    private void agregarCampo(Map<String, RequestBody> campos, String nombre, Object valor) {
-        if (valor == null) {
-            return;
-        }
-        campos.put(
-                nombre,
-                RequestBody.create(MediaType.parse("text/plain"), String.valueOf(valor))
-        );
-    }
-
-    private MultipartBody.Part construirImagen(File imagen, String contentType) {
+    private RequestBody construirCuerpo(OportunidadRequest request, File imagen, String contentType) {
         if (imagen == null || !imagen.isFile()) {
             throw new IllegalArgumentException("La imagen indicada no existe.");
         }
         String tipo = contentType == null || contentType.trim().isEmpty()
-                ? "application/octet-stream"
+                ? "image/jpeg"
                 : contentType;
-        RequestBody body = RequestBody.create(MediaType.parse(tipo), imagen);
-        return MultipartBody.Part.createFormData("imagen", imagen.getName(), body);
+        MultipartBody.Builder cuerpo = new MultipartBody.Builder().setType(MultipartBody.FORM);
+        agregarCampo(cuerpo, "organizacion", request.getOrganizacion());
+        agregarCampo(cuerpo, "titulo", request.getTitulo());
+        agregarCampo(cuerpo, "descripcion", request.getDescripcion());
+        agregarCampo(cuerpo, "ubicacion", request.getUbicacion());
+        agregarCampo(cuerpo, "causa", request.getCausa());
+        agregarCampo(cuerpo, "tipo_actividad", request.getTipoActividad());
+        agregarCampo(cuerpo, "disponibilidad", request.getDisponibilidad());
+        agregarCampo(cuerpo, "requisitos", request.getRequisitos());
+        agregarCampo(cuerpo, "cupos", request.getCupos());
+        agregarCampo(cuerpo, "fecha_actividad", request.getFechaActividad());
+        agregarCampo(cuerpo, "activa", request.isActiva());
+        cuerpo.addFormDataPart(
+                "imagen",
+                imagen.getName(),
+                RequestBody.create(MediaType.parse(tipo), imagen)
+        );
+        return cuerpo.build();
+    }
+
+    private void agregarCampo(MultipartBody.Builder cuerpo, String nombre, Object valor) {
+        if (valor == null) {
+            return;
+        }
+        cuerpo.addFormDataPart(nombre, String.valueOf(valor));
     }
 
     private String textoOpcional(String texto) {
