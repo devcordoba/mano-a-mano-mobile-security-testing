@@ -54,6 +54,11 @@
         <activity
             android:name=".PerfilActivity"
             android:exported="false" />
+
+        <!-- MENSAJES -->
+        <activity
+            android:name=".MensajesActivity"
+            android:exported="false" />
     </application>
 
 </manifest>

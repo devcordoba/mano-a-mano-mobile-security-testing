@@ -12,6 +12,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.button.MaterialButton;
+import com.ispc.manoamano.utilidades.NavegacionMensajes; // NUEVO (1)
 
 public class ContactActivity extends AppCompatActivity {
 
@@ -41,6 +42,13 @@ public class ContactActivity extends AppCompatActivity {
         configurarNavegacion(bottomNavigation);
         configurarBotonContactanos(btnContactanos, miFormulario);
         configurarBotonEnviarMensaje(btnEnviar, etNombre, etEmail, etAsunto, etMensaje, miFormulario);
+    }
+
+    // NUEVO (2): al volver a esta pantalla, mostrar u ocultar "Mensajes" según la sesión
+    @Override
+    protected void onResume() {
+        super.onResume();
+        NavegacionMensajes.actualizar(this, findViewById(R.id.bottomNavigation), R.id.nav_contacto);
     }
 
     private void configurarContactoEmail(LinearLayout cardEmail) {
@@ -83,6 +91,11 @@ public class ContactActivity extends AppCompatActivity {
         bottomNavigation.setSelectedItemId(R.id.nav_contacto);
 
         bottomNavigation.setOnItemSelectedListener(item -> {
+
+            // NUEVO (3): si tocaron "Mensajes", lo maneja NavegacionMensajes
+            if (NavegacionMensajes.manejarSeleccion(this, item.getItemId())) {
+                return true;
+            }
 
             if (item.getItemId() == R.id.nav_inicio) {
                 Intent intent = new Intent(this, MainActivity.class);
