@@ -4,6 +4,17 @@
 
     <uses-permission android:name="android.permission.INTERNET" />
 
+    <queries>
+        <intent>
+            <action android:name="android.intent.action.SENDTO" />
+            <data android:scheme="mailto" />
+        </intent>
+        <intent>
+            <action android:name="android.intent.action.DIAL" />
+            <data android:scheme="tel" />
+        </intent>
+    </queries>
+
     <application
         android:allowBackup="false"
         android:dataExtractionRules="@xml/data_extraction_rules"
@@ -29,7 +40,10 @@
         </activity> <!-- PANTALLA PRINCIPAL -->
         <activity
             android:name=".MainActivity"
-            android:exported="false" /> <!-- LOGIN -->
+            android:exported="false"
+            android:windowSoftInputMode="adjustResize" />
+
+        <!-- LOGIN -->
         <activity
             android:name=".LoginActivity"
             android:exported="false" /> <!-- REGISTRO -->

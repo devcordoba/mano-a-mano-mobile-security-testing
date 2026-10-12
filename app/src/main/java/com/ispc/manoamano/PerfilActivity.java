@@ -2,6 +2,7 @@ package com.ispc.manoamano;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
@@ -28,13 +29,14 @@ public class PerfilActivity extends AppCompatActivity {
 
         sessionManager = new SessionManager(this);
 
-        // Si no hay sesión iniciada, mandamos al Login
         if (!sessionManager.tieneSesion()) {
+            Toast.makeText(this, "Iniciá sesión para ver tu perfil.", Toast.LENGTH_SHORT).show();
             irAlLogin();
             return;
         }
 
         setContentView(R.layout.activity_perfil);
+        Volver.conectar(this);
 
         authRepository = new AuthRepository(this);
 
@@ -46,10 +48,7 @@ public class PerfilActivity extends AppCompatActivity {
         // Hacer click en Editar perfil nos mueve hacia su pantalla
         btnEditarDatos.setOnClickListener(v -> irAEditarPerfil());
 
-        // 1) Mostramos lo que ya tenemos guardado en el celu
         mostrarDatosGuardados();
-
-        // 2) Pedimos los datos actualizados al servidor
         cargarPerfilDesdeApi();
     }
 
@@ -68,10 +67,12 @@ public class PerfilActivity extends AppCompatActivity {
     }
 
     private void cargarPerfilDesdeApi() {
+        findViewById(R.id.rueditaPerfil).setVisibility(View.VISIBLE);
         authRepository.perfil(new ApiCallback<PerfilResponse>(this) {
 
             @Override
             protected void onSuccess(PerfilResponse body) {
+                findViewById(R.id.rueditaPerfil).setVisibility(View.GONE);
                 if (isFinishing() || isDestroyed()) {
                     return;
                 }
@@ -84,7 +85,6 @@ public class PerfilActivity extends AppCompatActivity {
                         ? null
                         : usuario.getPerfil().getRol();
 
-                // Guardamos los datos actualizados (ahora sí con email)
                 sessionManager.guardarUsuario(
                         usuario.getId(),
                         usuario.getUsername(),
@@ -105,10 +105,15 @@ public class PerfilActivity extends AppCompatActivity {
 
             @Override
             protected void onError(int codigo) {
-                // 401 = sesión vencida o inválida (ApiCallback ya borró la sesión)
+                findViewById(R.id.rueditaPerfil).setVisibility(View.GONE);
                 if (codigo == 401 && !isFinishing()) {
                     irAlLogin();
                 }
+            }
+
+            @Override
+            protected void onNetworkError(Throwable t) {
+                findViewById(R.id.rueditaPerfil).setVisibility(View.GONE);
             }
         });
     }
