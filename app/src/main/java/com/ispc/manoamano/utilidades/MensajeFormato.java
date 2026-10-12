@@ -17,6 +17,17 @@ public final class MensajeFormato {
         return dia + "/" + mes + " " + hora;
     }
 
+    public static String formatearFechaHora(String fechaIso) {
+        if (fechaIso == null || fechaIso.length() < 16 || fechaIso.charAt(10) != 'T') {
+            return "";
+        }
+        return fechaIso.substring(8, 10) + "/"
+                + fechaIso.substring(5, 7) + "/"
+                + fechaIso.substring(0, 4)
+                + " · "
+                + fechaIso.substring(11, 16);
+    }
+
     public static String nombreVisible(String username) {
         if (username == null || username.trim().isEmpty()) {
             return "Usuario";
