@@ -30,10 +30,7 @@ public abstract class ApiCallback<T> implements Callback<T> {
             return;
         }
 
-        String mensaje =
-                HttpErrorHandler.obtenerMensaje(
-                        response.code()
-                );
+        String mensaje = mensajeParaCodigo(response.code());
 
         if (response.code() == 401) {
             new SessionManager(context).cerrarSesion();
@@ -65,6 +62,10 @@ public abstract class ApiCallback<T> implements Callback<T> {
         ).show();
 
         onNetworkError(t);
+    }
+
+    protected String mensajeParaCodigo(int codigo) {
+        return HttpErrorHandler.obtenerMensaje(codigo);
     }
 
     protected abstract void onSuccess(T body);
