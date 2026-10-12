@@ -1,5 +1,6 @@
 package com.ispc.manoamano.adaptadores;
 
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,8 +10,10 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.ispc.manoamano.MainActivity;
+import com.bumptech.glide.Glide;
+import com.ispc.manoamano.DetalleOportunidadActivity;
 import com.ispc.manoamano.R;
+import com.ispc.manoamano.api.RetrofitClient;
 import com.ispc.manoamano.modelos.Oportunidad;
 
 import java.util.List;
@@ -33,19 +36,24 @@ public class OportunidadAdapter extends RecyclerView.Adapter<OportunidadAdapter.
     @Override
     public void onBindViewHolder(@NonNull OportunidadViewHolder holder, int position) {
         Oportunidad oportunidad = oportunidades.get(position);
-        holder.imageOportunidad.setImageResource(oportunidad.getImagenResId());
+        Glide.with(holder.itemView.getContext())
+                .load(RetrofitClient.normalizarUrlRecurso(oportunidad.getImagenUrl()))
+                .placeholder(R.drawable.example_img1)
+                .error(R.drawable.example_img1)
+                .into(holder.imageOportunidad);
         holder.textTitulo.setText(oportunidad.getTitulo());
-        holder.textOrganizacion.setText(oportunidad.getOrganizacion());
+        holder.textOrganizacion.setText(oportunidad.getNombreOrganizacion());
         holder.textUbicacion.setText(oportunidad.getUbicacion());
-        holder.textCausa.setText(oportunidad.getCausa());
-        holder.textActividad.setText(oportunidad.getTipoActividad());
+        holder.textCausa.setText(oportunidad.getNombreCausa());
+        holder.textActividad.setText(oportunidad.getNombreTipoActividad());
         holder.textDisponibilidad.setText(oportunidad.getDisponibilidad());
         holder.textCuposFecha.setText(holder.itemView.getContext().getString(
                 R.string.cupos_y_fecha, oportunidad.getCupos(), oportunidad.getFechaActividad()));
         holder.textResumen.setText(oportunidad.getResumen());
         holder.itemView.setOnClickListener(v -> {
-            android.content.Intent intent = new android.content.Intent(v.getContext(), MainActivity.DetalleOportunidadActivity.class);
-            intent.putExtra("EXTRA_OPORTUNIDAD", oportunidad);
+            // Se pasa solo el id: el detalle pide la oportunidad completa a la API.
+            Intent intent = new Intent(v.getContext(), DetalleOportunidadActivity.class);
+            intent.putExtra(DetalleOportunidadActivity.EXTRA_OPORTUNIDAD_ID, oportunidad.getId());
             v.getContext().startActivity(intent);
         });
     }

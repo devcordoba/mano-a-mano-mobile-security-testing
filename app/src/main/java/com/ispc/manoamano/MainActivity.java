@@ -2,18 +2,17 @@ package com.ispc.manoamano;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageButton;
-import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -21,31 +20,50 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.ispc.manoamano.adaptadores.OportunidadAdapter;
+import com.ispc.manoamano.almacenamiento.SessionManager;
+import com.ispc.manoamano.modelos.Causa;
+import com.ispc.manoamano.modelos.LogoutResponse;
 import com.ispc.manoamano.modelos.Oportunidad;
+import com.ispc.manoamano.modelos.TipoActividad;
+import com.ispc.manoamano.repositorios.AuthRepository;
+import com.ispc.manoamano.repositorios.CausaRepository;
+import com.ispc.manoamano.repositorios.OportunidadRepository;
+import com.ispc.manoamano.repositorios.TipoActividadRepository;
+import com.ispc.manoamano.utilidades.ApiCallback;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
-import java.util.Locale;
-import java.util.Random;
+
+import retrofit2.Call;
 
 public class MainActivity extends AppCompatActivity {
-    private static final int[] IMAGENES_OPORTUNIDADES = {
-            R.drawable.example_img1,
-            R.drawable.example_img2,
-            R.drawable.example_img3,
-            R.drawable.example_img4,
-            R.drawable.example_img5
-    };
+    private static final String OPCION_TODAS = "Todas";
+    private static final long DEMORA_BUSQUEDA_MS = 300;
 
     private final List<Oportunidad> todasLasOportunidades = new ArrayList<>();
     private final List<Oportunidad> oportunidadesVisibles = new ArrayList<>();
-    private final Random random = new Random();
     private OportunidadAdapter adapter;
+    private ArrayAdapter<String> causasAdapter;
+    private ArrayAdapter<String> actividadesAdapter;
     private EditText editBuscar;
     private Spinner spinnerCausa;
     private Spinner spinnerActividad;
     private TextView textSinResultados;
+    private ProgressBar progressOportunidades;
+    private TextView tvBienvenida;
+    private TextView tvIniciarSesion;
+
+    private SessionManager sessionManager;
+    private AuthRepository authRepository;
+    private OportunidadRepository oportunidadRepository;
+    private CausaRepository causaRepository;
+    private TipoActividadRepository tipoActividadRepository;
+
+    private final Handler busquedaHandler = new Handler(Looper.getMainLooper());
+    private Runnable busquedaPendiente;
+    private Call<List<Oportunidad>> oportunidadesCall;
+    // Evita mostrar "sin resultados" antes de que responda la API.
+    private boolean catalogoCargado = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,30 +74,17 @@ public class MainActivity extends AppCompatActivity {
         spinnerCausa = findViewById(R.id.spinnerCausa);
         spinnerActividad = findViewById(R.id.spinnerActividad);
         textSinResultados = findViewById(R.id.textSinResultados);
-        TextView tvBienvenida = findViewById(R.id.tvBienvenida);
+        progressOportunidades = findViewById(R.id.progressOportunidades);
+        tvBienvenida = findViewById(R.id.tvBienvenida);
+        tvIniciarSesion = findViewById(R.id.tvIniciarSesion);
         RecyclerView recyclerOportunidades = findViewById(R.id.recyclerOportunidades);
-        TextView tvIniciarSesion = findViewById(R.id.tvIniciarSesion);
 
-        tvIniciarSesion.setOnClickListener(v -> {
-            Intent intent = new Intent(MainActivity.this, LoginActivity.class);
-            startActivity(intent);
-        });
+        sessionManager = new SessionManager(this);
+        authRepository = new AuthRepository(this);
+        oportunidadRepository = new OportunidadRepository(this);
+        causaRepository = new CausaRepository(this);
+        tipoActividadRepository = new TipoActividadRepository(this);
 
-        String nombreUsuario = null;
-        if (getIntent() != null && getIntent().hasExtra("EXTRA_USUARIO")) {
-            nombreUsuario = getIntent().getStringExtra("EXTRA_USUARIO");
-        }
-
-        if (nombreUsuario == null || nombreUsuario.trim().isEmpty()) {
-            tvBienvenida.setText(R.string.bienvenida_visitante);
-        } else {
-            tvBienvenida.setText(getString(R.string.bienvenida_usuario, nombreUsuario));
-            tvIniciarSesion.setText("Cerrar sesión");
-            tvIniciarSesion.setOnClickListener(null);
-        }
-
-        cargarOportunidades();
-        oportunidadesVisibles.addAll(todasLasOportunidades);
         adapter = new OportunidadAdapter(oportunidadesVisibles);
         recyclerOportunidades.setLayoutManager(new LinearLayoutManager(this));
         recyclerOportunidades.setAdapter(adapter);
@@ -87,51 +92,85 @@ public class MainActivity extends AppCompatActivity {
         configurarSpinners();
         configurarBuscador();
         configurarNavegacion();
+
+        cargarCausas();
+        cargarTiposActividad();
+        cargarOportunidades("");
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        // En onResume para que el encabezado se actualice al volver del login.
+        configurarBienvenida();
+    }
+
+    private void configurarBienvenida() {
+        if (!sessionManager.tieneSesion()) {
+            tvBienvenida.setText(R.string.bienvenida_visitante);
+            tvIniciarSesion.setText("Iniciar sesión");
+            tvIniciarSesion.setOnClickListener(v -> {
+                Intent intent = new Intent(MainActivity.this, LoginActivity.class);
+                startActivity(intent);
+            });
+            return;
+        }
+
+        String nombre = sessionManager.obtenerFirstName();
+        if (nombre == null || nombre.trim().isEmpty()) {
+            nombre = sessionManager.obtenerUsername();
+        }
+
+        if (nombre == null || nombre.trim().isEmpty()) {
+            tvBienvenida.setText(R.string.bienvenida_visitante);
+        } else {
+            tvBienvenida.setText(getString(R.string.bienvenida_usuario, nombre));
+        }
+        tvIniciarSesion.setText("Cerrar sesión");
+        tvIniciarSesion.setOnClickListener(v -> cerrarSesion());
+    }
+
+    private void cerrarSesion() {
+        tvIniciarSesion.setEnabled(false);
+        // Aunque falle el logout en el servidor, la sesión local se borra igual.
+        authRepository.logout(new ApiCallback<LogoutResponse>(this) {
+            @Override
+            protected void onSuccess(LogoutResponse response) {
+                finalizarCierreSesion();
+            }
+
+            @Override
+            protected void onError(int codigo) {
+                finalizarCierreSesion();
+            }
+
+            @Override
+            protected void onNetworkError(Throwable t) {
+                finalizarCierreSesion();
+            }
+        });
+    }
+
+    private void finalizarCierreSesion() {
+        sessionManager.cerrarSesion();
+        Intent intent = new Intent(MainActivity.this, LoginActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(intent);
+        finish();
     }
 
     private void configurarSpinners() {
-        List<String> causas = Arrays.asList(
-                "Todas", "Animales", "Cultura y arte", "Deporte y recreación",
-                "Derechos humanos", "Educación y alfabetización",
-                "Emergencias y desastres", "Inclusión social", "Medio ambiente",
-                "Otra", "Salud y bienestar");
-
-        List<String> actividades = Arrays.asList(
-                "Todas",
-                "Accompañamiento a personas mayores",
-                "Alfabetización y educación popular",
-                "Apoyo escolar y tareas dirigidas",
-                "Arte, cultura y talleres creativos",
-                "Atención en merenderos y comedores comunitarios",
-                "Campañas de concientización",
-                "Cocina / logística",
-                "Comunicación, diseño y redes sociales",
-                "Cuidado de niños, niñas y adolescentes",
-                "Defensa de derechos y acompañamiento legal básico",
-                "Deporte, recreación y actividades al aire libre",
-                "Emergencias y operativos solidarios",
-                "Huertas urbanas y agricultura social",
-                "Informática y alfabetización digital",
-                "Interpretación y traducción",
-                "Logística, depósito y distribución",
-                "Mantenimiento, pintura y refacción",
-                "Medio ambiente y limpieza de espacios públicos",
-                "Música, teatro y eventos comunitarios",
-                "Otra (detallar en descripción o requisitos)",
-                "Recaudación de fondos y voluntariado administrativo",
-                "Reforestación y trabajo al aire libre",
-                "Salud comunitaria y primeros auxilios",
-                "Trabajo al aire libre",
-                "Visitas domiciliarias y contención social",
-                "Voluntariado con animales y refugios",
-                "Voluntariado en hospitales y centros de salud");
-
-        ArrayAdapter<String> causasAdapter = new ArrayAdapter<>(
+        // Arrancan solo con "Todas" y se completan con lo que devuelve la API.
+        List<String> causas = new ArrayList<>();
+        causas.add(OPCION_TODAS);
+        causasAdapter = new ArrayAdapter<>(
                 this, R.layout.item_spinner, R.id.textSpinnerItem, causas);
         causasAdapter.setDropDownViewResource(R.layout.item_spinner_dropdown);
         spinnerCausa.setAdapter(causasAdapter);
 
-        ArrayAdapter<String> actividadesAdapter = new ArrayAdapter<>(
+        List<String> actividades = new ArrayList<>();
+        actividades.add(OPCION_TODAS);
+        actividadesAdapter = new ArrayAdapter<>(
                 this, R.layout.item_spinner, R.id.textSpinnerItem, actividades);
         actividadesAdapter.setDropDownViewResource(R.layout.item_spinner_dropdown);
         spinnerActividad.setAdapter(actividadesAdapter);
@@ -155,40 +194,42 @@ public class MainActivity extends AppCompatActivity {
         editBuscar.addTextChangedListener(new TextWatcher() {
             @Override public void beforeTextChanged(CharSequence s, int start, int count, int after) { }
             @Override public void onTextChanged(CharSequence s, int start, int before, int count) {
-                aplicarFiltros();
+                // Espera a que el usuario deje de escribir para no pedir a la API en cada tecla.
+                if (busquedaPendiente != null) {
+                    busquedaHandler.removeCallbacks(busquedaPendiente);
+                }
+                busquedaPendiente = () -> cargarOportunidades(editBuscar.getText().toString());
+                busquedaHandler.postDelayed(busquedaPendiente, DEMORA_BUSQUEDA_MS);
             }
             @Override public void afterTextChanged(Editable s) { }
         });
     }
 
+    // El texto se busca en el servidor (?q=); causa y actividad se filtran sobre lo recibido.
     private void aplicarFiltros() {
-        String busqueda = editBuscar.getText().toString().trim().toLowerCase(Locale.ROOT);
-        String causaElegida = spinnerCausa.getSelectedItem().toString();
-        String actividadElegida = spinnerActividad.getSelectedItem().toString();
+        String causaElegida = opcionElegida(spinnerCausa);
+        String actividadElegida = opcionElegida(spinnerActividad);
 
         oportunidadesVisibles.clear();
         for (Oportunidad oportunidad : todasLasOportunidades) {
-            String textoCompleto = (oportunidad.getTitulo() + " "
-                    + oportunidad.getUbicacion() + " "
-                    + oportunidad.getOrganizacion() + " "
-                    + oportunidad.getCausa() + " "
-                    + oportunidad.getTipoActividad() + " "
-                    + oportunidad.getResumen()).toLowerCase(Locale.ROOT);
+            boolean coincideCausa = causaElegida.equals(OPCION_TODAS)
+                    || oportunidad.getNombreCausa().equals(causaElegida);
+            boolean coincideActividad = actividadElegida.equals(OPCION_TODAS)
+                    || oportunidad.getNombreTipoActividad().equals(actividadElegida);
 
-            boolean coincideTexto = textoCompleto.contains(busqueda);
-            boolean coincideCausa = causaElegida.equals("Todas")
-                    || oportunidad.getCausa().equals(causaElegida);
-            boolean coincideActividad = actividadElegida.equals("Todas")
-                    || oportunidad.getTipoActividad().equals(actividadElegida);
-
-            if (coincideTexto && coincideCausa && coincideActividad) {
+            if (coincideCausa && coincideActividad) {
                 oportunidadesVisibles.add(oportunidad);
             }
         }
 
         adapter.notifyDataSetChanged();
         textSinResultados.setVisibility(
-                oportunidadesVisibles.isEmpty() ? View.VISIBLE : View.GONE);
+                catalogoCargado && oportunidadesVisibles.isEmpty() ? View.VISIBLE : View.GONE);
+    }
+
+    private String opcionElegida(Spinner spinner) {
+        Object seleccion = spinner.getSelectedItem();
+        return seleccion == null ? OPCION_TODAS : seleccion.toString();
     }
 
     private void configurarNavegacion() {
@@ -216,125 +257,89 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    private void cargarOportunidades() {
-        todasLasOportunidades.add(new Oportunidad(10,
-                "Festival barrial - equipo de producción", "Boedo, CABA", "Cultura en Barrio",
-                "Cultura y arte", "Música, teatro y eventos comunitarios",
-                "Viernes y sábado (fin de semana del evento)", 12, "2026-10-01", true,
-                obtenerImagenAleatoria(),
-                "Ayuda en montaje, acreditaciones y comunicación el día del evento."));
-        todasLasOportunidades.add(new Oportunidad(9,
-                "Taller de muralismo con jóvenes", "Barracas, CABA", "Cultura en Barrio",
-                "Cultura y arte", "Arte, cultura y talleres creativos",
-                "Sábados 14:00–18:00 por 4 semanas", 4, "2026-10-13", true,
-                obtenerImagenAleatoria(),
-                "Coordinación de diseño y pintura en muro de escuela secundaria. Materiales provistos."));
-        todasLasOportunidades.add(new Oportunidad(8,
-                "Paseo y socialización de perros en adopción", "Vicente López, GBA Norte", "Refugio Patitas",
-                "Animales", "Voluntariado con animales y refugios",
-                "Fines de semana, turnos flexibles", 10, "2026-10-03", true,
-                obtenerImagenAleatoria(),
-                "Salidas de 40 minutos por perro mediano. Inducción obligatoria el primer día."));
-        todasLasOportunidades.add(new Oportunidad(7,
-                "Comedor comunitario - turno de cocina y servicio", "La Boca, CABA", "Red Inclusión Buenos Aires",
-                "Inclusión social", "Atención en merenderos y comedores comunitarios",
-                "Domingos 11:00–14:00", 8, "2026-09-20", true,
-                obtenerImagenAleatoria(),
-                "Apoyo en preparación de viandas y servicio de mesa. Cocina industrial con protocolo de higiene."));
-        todasLasOportunidades.add(new Oportunidad(6,
-                "Mentoría para búsqueda de primer empleo", "San Telmo, CABA (híbrido)", "Red Inclusión Buenos Aires",
-                "Inclusión social", "Campañas de concientización",
-                "Viernes 15:00–18:00", 3, "2026-10-28", true,
-                obtenerImagenAleatoria(),
-                "Acompañamiento en armado de CV, simulacros de entrevista y uso de portales laborales."));
-        todasLasOportunidades.add(new Oportunidad(5,
-                "Acompañamiento a pacientes en sala de espera", "Saavedra, CABA", "Hospital Comunitario Norte",
-                "Salud y bienestar", "Voluntariado en hospitales y centros de salud",
-                "Lunes a viernes, turnos mañana o tarde", 5, "2026-09-23", true,
-                obtenerImagenAleatoria(),
-                "Orientación a familias, entrega de información y contención en guardia."));
-        todasLasOportunidades.add(new Oportunidad(4,
-                "Huerta comunitaria en Parque Patricios", "Parque Patricios, CABA", "Verde Urbano ONG",
-                "Medio ambiente", "Huertas urbanas y agricultura social",
-                "Miércoles 18:00–20:00", 6, "2026-10-11", true,
-                obtenerImagenAleatoria(),
-                "Mantenimiento semanal: riego, compost y siembra estacional. Ideal para quienes quieren aprender agricultura urbana."));
-        todasLasOportunidades.add(new Oportunidad(3,
-                "Jornada de limpieza del arroyo Maldonado", "Villa Crespo / Chacarita, CABA", "Verde Urbano ONG",
-                "Medio ambiente", "Medio ambiente y limpieza de espacios públicos",
-                "Sábado 9:00–13:00 (una jornada)", 15, "2026-09-27", true,
-                obtenerImagenAleatoria(),
-                "Operativo de limpieza y clasificación de residuos. Entrega de elementos de protección y refrigerio."));
-        todasLasOportunidades.add(new Oportunidad(2,
-                "Taller de alfabetización digital para adultos mayores", "Caballito, CABA", "Fundación Manos Unidas",
-                "Educación y alfabetización", "Informática y alfabetización digital",
-                "Sábados 10:00–12:00", 2, "2026-10-18", true,
-                obtenerImagenAleatoria(),
-                "Enseñanza básica de smartphone, correo y trámites en Mi Argentina. Grupos reducidos de hasta 8 personas."));
-        todasLasOportunidades.add(new Oportunidad(1,
-                "Apoyo escolar en merendero de Flores", "Flores, CABA", "Fundación Manos Unidas",
-                "Educación y alfabetización", "Apoyo escolar y tareas dirigidas",
-                "Martes y jueves 17:00–19:00", 4, "2026-10-04", true,
-                obtenerImagenAleatoria(),
-                "Buscamos voluntarios para acompañar a niños de primaria con tareas escolares y lectura. Se brinda capacitación inicial."));
-    }
-
-    private int obtenerImagenAleatoria() {
-        return IMAGENES_OPORTUNIDADES[random.nextInt(IMAGENES_OPORTUNIDADES.length)];
-    }
-
-    public static class DetalleOportunidadActivity extends AppCompatActivity {
-
-        private ImageView imgDetalle;
-        private TextView tvTitulo, tvOrganizacion, tvCausa, tvActividad;
-        private TextView tvUbicacion, tvDisponibilidad, tvCuposFecha, tvResumen;
-        private Button btnPostularse;
-        private ImageButton btnVolver;
-
-        @Override
-        protected void onCreate(Bundle savedInstanceState) {
-            super.onCreate(savedInstanceState);
-            setContentView(R.layout.activity_detalle_oportunidad);
-
-            initViews();
-
-            Oportunidad oportunidad = (Oportunidad) getIntent().getSerializableExtra("EXTRA_OPORTUNIDAD");
-
-            if (oportunidad != null) {
-                cargarDatos(oportunidad);
+    private void cargarCausas() {
+        causaRepository.obtenerCausas(new ApiCallback<List<Causa>>(this) {
+            @Override
+            protected void onSuccess(List<Causa> causas) {
+                causasAdapter.clear();
+                causasAdapter.add(OPCION_TODAS);
+                if (causas != null) {
+                    for (Causa causa : causas) {
+                        causasAdapter.add(causa.getNombre());
+                    }
+                }
+                causasAdapter.notifyDataSetChanged();
             }
+        });
+    }
 
-            btnVolver.setOnClickListener(v -> finish());
+    private void cargarTiposActividad() {
+        tipoActividadRepository.obtenerTiposActividad(new ApiCallback<List<TipoActividad>>(this) {
+            @Override
+            protected void onSuccess(List<TipoActividad> tiposActividad) {
+                actividadesAdapter.clear();
+                actividadesAdapter.add(OPCION_TODAS);
+                if (tiposActividad != null) {
+                    for (TipoActividad tipoActividad : tiposActividad) {
+                        actividadesAdapter.add(tipoActividad.getNombre());
+                    }
+                }
+                actividadesAdapter.notifyDataSetChanged();
+            }
+        });
+    }
 
-            btnPostularse.setOnClickListener(v ->
-                    Toast.makeText(this, "¡Postulación enviada con éxito!", Toast.LENGTH_SHORT).show()
-            );
+    private void cargarOportunidades(String busqueda) {
+        // Si había una búsqueda en curso se cancela para que no pise a la más reciente.
+        if (oportunidadesCall != null) {
+            oportunidadesCall.cancel();
         }
 
-        private void initViews() {
-            imgDetalle = findViewById(R.id.imgDetalle);
-            tvTitulo = findViewById(R.id.tvDetalleTitulo);
-            tvOrganizacion = findViewById(R.id.tvDetalleOrganizacion);
-            tvCausa = findViewById(R.id.tvDetalleCausa);
-            tvActividad = findViewById(R.id.tvDetalleActividad);
-            tvUbicacion = findViewById(R.id.tvDetalleUbicacion);
-            tvDisponibilidad = findViewById(R.id.tvDetalleDisponibilidad);
-            tvCuposFecha = findViewById(R.id.tvDetalleCuposFecha);
-            tvResumen = findViewById(R.id.tvDetalleResumen);
-            btnPostularse = findViewById(R.id.btnPostularse);
-            btnVolver = findViewById(R.id.btnVolver);
-        }
+        mostrarCargando(true);
+        oportunidadesCall = oportunidadRepository.obtenerOportunidades(
+                true,
+                busqueda,
+                new ApiCallback<List<Oportunidad>>(this) {
+                    @Override
+                    protected void onSuccess(List<Oportunidad> oportunidades) {
+                        mostrarCargando(false);
+                        todasLasOportunidades.clear();
+                        if (oportunidades != null) {
+                            todasLasOportunidades.addAll(oportunidades);
+                        }
+                        catalogoCargado = true;
+                        aplicarFiltros();
+                    }
 
-        private void cargarDatos(Oportunidad op) {
-            imgDetalle.setImageResource(op.getImagenResId());
-            tvTitulo.setText(op.getTitulo());
-            tvOrganizacion.setText(op.getOrganizacion());
-            tvCausa.setText(op.getCausa());
-            tvActividad.setText(op.getTipoActividad());
-            tvUbicacion.setText("Ubicación: " + op.getUbicacion());
-            tvDisponibilidad.setText("⏱ Disponibilidad: " + op.getDisponibilidad());
-            tvCuposFecha.setText(getString(R.string.cupos_y_fecha, op.getCupos(), op.getFechaActividad()));
-            tvResumen.setText(op.getResumen());
+                    @Override
+                    protected void onError(int codigo) {
+                        mostrarCargando(false);
+                    }
+
+                    @Override
+                    protected void onNetworkError(Throwable t) {
+                        mostrarCargando(false);
+                    }
+                }
+        );
+    }
+
+    // Si se cancela una búsqueda no se oculta: la nueva llamada lo vuelve a mostrar.
+    private void mostrarCargando(boolean cargando) {
+        progressOportunidades.setVisibility(cargando ? View.VISIBLE : View.GONE);
+        if (cargando) {
+            textSinResultados.setVisibility(View.GONE);
         }
+    }
+
+    @Override
+    protected void onDestroy() {
+        if (busquedaPendiente != null) {
+            busquedaHandler.removeCallbacks(busquedaPendiente);
+        }
+        if (oportunidadesCall != null) {
+            oportunidadesCall.cancel();
+        }
+        super.onDestroy();
     }
 }
