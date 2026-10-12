@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="8dp"
+    android:background="@color/surface"
+    android:orientation="vertical"
+    android:padding="12dp">
+
+    <TextView
+        android:id="@+id/tvTituloItem"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textColor="@color/text_primary"
+        android:textSize="16sp"
+        android:textStyle="bold" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/btnPausarItem"
+            android:layout_width="0dp"
+            android:layout_height="36dp"
+            android:layout_marginEnd="4dp"
+            android:layout_weight="1"
+            android:background="@drawable/button_login"
+            android:clickable="true"
+            android:focusable="true"
+            android:gravity="center"
+            android:text="Pausar"
+            android:textColor="@color/primary_dark"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/btnEditarItem"
+            android:layout_width="0dp"
+            android:layout_height="36dp"
+            android:layout_marginEnd="4dp"
+            android:layout_weight="1"
+            android:background="@drawable/button_login"
+            android:clickable="true"
+            android:focusable="true"
+            android:gravity="center"
+            android:text="Editar"
+            android:textColor="@color/primary_dark"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/btnEliminarItem"
+            android:layout_width="0dp"
+            android:layout_height="36dp"
+            android:layout_weight="1"
+            android:clickable="true"
+            android:focusable="true"
+            android:gravity="center"
+            android:text="Eliminar"
+            android:textColor="@color/danger"
+            android:textStyle="bold" />
+    </LinearLayout>
+</LinearLayout>

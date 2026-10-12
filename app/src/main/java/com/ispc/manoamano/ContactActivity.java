@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.ScrollView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -23,6 +24,7 @@ public class ContactActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_contact);
+        Volver.conectar(this);
 
         LinearLayout cardEmail = findViewById(R.id.cardEmail);
         LinearLayout cardTelefono = findViewById(R.id.cardTelefono);
@@ -36,12 +38,13 @@ public class ContactActivity extends AppCompatActivity {
         EditText etAsunto = findViewById(R.id.editAsuntoContacto);
         EditText etMensaje = findViewById(R.id.editMensajeContacto);
         View miFormulario = findViewById(R.id.formularioContacto);
+        ScrollView scroll = findViewById(R.id.scrollContacto);
 
         configurarContactoEmail(cardEmail);
         configurarContactoTelefono(cardTelefono);
         configurarNavegacion(bottomNavigation);
-        configurarBotonContactanos(btnContactanos, miFormulario);
-        configurarBotonEnviarMensaje(btnEnviar, etNombre, etEmail, etAsunto, etMensaje, miFormulario);
+        configurarBotonContactanos(btnContactanos, miFormulario, scroll, etNombre);
+        configurarBotonEnviarMensaje(btnEnviar, btnContactanos, etNombre, etEmail, etAsunto, etMensaje, miFormulario);
     }
 
     // NUEVO (2): al volver a esta pantalla, mostrar u ocultar "Mensajes" según la sesión
@@ -118,19 +121,26 @@ public class ContactActivity extends AppCompatActivity {
         });
     }
 
-    private void configurarBotonContactanos(MaterialButton btnContactanos, View miFormulario) {
+    private void configurarBotonContactanos(MaterialButton btnContactanos, View miFormulario,
+                                             ScrollView scroll, EditText etNombre) {
         btnContactanos.setOnClickListener(view -> {
-            // Alterna la visibilidad del formulario
-            if (miFormulario.getVisibility() == View.GONE) {
-                miFormulario.setVisibility(View.VISIBLE);
-            } else {
-                miFormulario.setVisibility(View.GONE);
+            boolean abrir = miFormulario.getVisibility() != View.VISIBLE;
+            miFormulario.setVisibility(abrir ? View.VISIBLE : View.GONE);
+            btnContactanos.setText(abrir ? "OCULTAR FORMULARIO" : getString(R.string.contacto_boton));
+            if (abrir) {
+                miFormulario.post(() -> {
+                    scroll.smoothScrollTo(0, miFormulario.getTop());
+                    scroll.post(() -> {
+                        scroll.smoothScrollTo(0, miFormulario.getTop());
+                        etNombre.requestFocus();
+                    });
+                });
             }
         });
     }
 
-    private void configurarBotonEnviarMensaje(MaterialButton btnEnviar, EditText etNombre,
-                                              EditText etEmail, EditText etAsunto,
+    private void configurarBotonEnviarMensaje(MaterialButton btnEnviar, MaterialButton btnContactanos,
+                                              EditText etNombre, EditText etEmail, EditText etAsunto,
                                               EditText etMensaje, View miFormulario) {
         btnEnviar.setOnClickListener(view -> {
 
@@ -195,6 +205,7 @@ public class ContactActivity extends AppCompatActivity {
             etMensaje.setText("");
 
             miFormulario.setVisibility(View.GONE);
+            btnContactanos.setText(R.string.contacto_boton);
         });
     }
 }
