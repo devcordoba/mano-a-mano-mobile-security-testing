@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.widget.Button;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -44,9 +43,8 @@ public class PerfilActivity extends AppCompatActivity {
         tvRol = findViewById(R.id.tvRol);
         Button btnEditarDatos = findViewById(R.id.btnEditarDatos);
 
-        btnEditarDatos.setOnClickListener(v ->
-                Toast.makeText(this, "Próximamente", Toast.LENGTH_SHORT).show()
-        );
+        // Hacer click en Editar perfil nos mueve hacia su pantalla
+        btnEditarDatos.setOnClickListener(v -> irAEditarPerfil());
 
         // 1) Mostramos lo que ya tenemos guardado en el celu
         mostrarDatosGuardados();
@@ -133,6 +131,10 @@ public class PerfilActivity extends AppCompatActivity {
         tvRol.setText("Rol: " + (rol != null && !rol.isEmpty() ? rol : "Sin rol"));
     }
 
+    private void irAEditarPerfil() {
+        Intent intent = new Intent(this, PerfilEditarActivity.class);
+        startActivity(intent);
+    }
     private void irAlLogin() {
         Intent intent = new Intent(this, LoginActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
