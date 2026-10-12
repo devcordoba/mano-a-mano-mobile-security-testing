@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.ScrollView;
 import android.widget.Toast;
 
@@ -13,7 +14,15 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.button.MaterialButton;
+import com.ispc.manoamano.modelos.ContactoRequest;
+import com.ispc.manoamano.modelos.ContactoResponse;
+import com.ispc.manoamano.repositorios.ContactoRepository;
+import com.ispc.manoamano.utilidades.HttpErrorHandler;
 import com.ispc.manoamano.utilidades.NavegacionMensajes; // NUEVO (1)
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class ContactActivity extends AppCompatActivity {
 
@@ -38,13 +47,23 @@ public class ContactActivity extends AppCompatActivity {
         EditText etAsunto = findViewById(R.id.editAsuntoContacto);
         EditText etMensaje = findViewById(R.id.editMensajeContacto);
         View miFormulario = findViewById(R.id.formularioContacto);
+        ProgressBar ruedita = findViewById(R.id.rueditaContacto);
         ScrollView scroll = findViewById(R.id.scrollContacto);
 
         configurarContactoEmail(cardEmail);
         configurarContactoTelefono(cardTelefono);
         configurarNavegacion(bottomNavigation);
         configurarBotonContactanos(btnContactanos, miFormulario, scroll, etNombre);
-        configurarBotonEnviarMensaje(btnEnviar, btnContactanos, etNombre, etEmail, etAsunto, etMensaje, miFormulario);
+        configurarBotonEnviarMensaje(
+                btnEnviar,
+                btnContactanos,
+                etNombre,
+                etEmail,
+                etAsunto,
+                etMensaje,
+                miFormulario,
+                ruedita
+        );
     }
 
     // NUEVO (2): al volver a esta pantalla, mostrar u ocultar "Mensajes" según la sesión
@@ -141,7 +160,8 @@ public class ContactActivity extends AppCompatActivity {
 
     private void configurarBotonEnviarMensaje(MaterialButton btnEnviar, MaterialButton btnContactanos,
                                               EditText etNombre, EditText etEmail, EditText etAsunto,
-                                              EditText etMensaje, View miFormulario) {
+                                              EditText etMensaje, View miFormulario, ProgressBar ruedita) {
+        ContactoRepository contactoRepository = new ContactoRepository(this);
         btnEnviar.setOnClickListener(view -> {
 
             String nombre = etNombre.getText().toString().trim();
@@ -197,15 +217,54 @@ public class ContactActivity extends AppCompatActivity {
                 return;
             }
 
-            Toast.makeText(this, "¡Mensaje enviado con éxito! Nos contactaremos pronto.", Toast.LENGTH_LONG).show();
+            btnEnviar.setEnabled(false);
+            ruedita.setVisibility(View.VISIBLE);
+            contactoRepository.crear(
+                    new ContactoRequest(nombre, email, asunto, mensaje),
+                    new Callback<ContactoResponse>() {
+                        @Override
+                        public void onResponse(Call<ContactoResponse> call, Response<ContactoResponse> response) {
+                            if (isFinishing()) {
+                                return;
+                            }
+                            btnEnviar.setEnabled(true);
+                            ruedita.setVisibility(View.GONE);
+                            if (!response.isSuccessful()) {
+                                Toast.makeText(
+                                        ContactActivity.this,
+                                        HttpErrorHandler.obtenerMensaje(response.code()),
+                                        Toast.LENGTH_LONG
+                                ).show();
+                                return;
+                            }
+                            Toast.makeText(
+                                    ContactActivity.this,
+                                    "¡Mensaje enviado con éxito! Nos contactaremos pronto.",
+                                    Toast.LENGTH_LONG
+                            ).show();
+                            etNombre.setText("");
+                            etEmail.setText("");
+                            etAsunto.setText("");
+                            etMensaje.setText("");
+                            miFormulario.setVisibility(View.GONE);
+                            btnContactanos.setText(R.string.contacto_boton);
+                        }
 
-            etNombre.setText("");
-            etEmail.setText("");
-            etAsunto.setText("");
-            etMensaje.setText("");
-
-            miFormulario.setVisibility(View.GONE);
-            btnContactanos.setText(R.string.contacto_boton);
+                        @Override
+                        public void onFailure(Call<ContactoResponse> call, Throwable t) {
+                            if (isFinishing()) {
+                                return;
+                            }
+                            btnEnviar.setEnabled(true);
+                            ruedita.setVisibility(View.GONE);
+                            Toast.makeText(
+                                    ContactActivity.this,
+                                    "No se pudo enviar el mensaje. Revisá tu conexión.",
+                                    Toast.LENGTH_LONG
+                            ).show();
+                        }
+                    }
+            );
         });
     }
 }

@@ -124,6 +124,14 @@ public class LoginActivity extends AppCompatActivity {
                     }
 
                     @Override
+                    protected String mensajeParaCodigo(int codigo) {
+                        if (codigo == 401) {
+                            return getString(R.string.login_credenciales_invalidas);
+                        }
+                        return super.mensajeParaCodigo(codigo);
+                    }
+
+                    @Override
                     protected void onError(int codigo) {
                         btnIngresar.setEnabled(true);
                         findViewById(R.id.rueditaLogin).setVisibility(View.GONE);

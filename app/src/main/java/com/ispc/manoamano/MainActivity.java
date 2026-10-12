@@ -342,7 +342,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void finalizarCierreSesion() {
         sessionManager.cerrarSesion();
-        Intent intent = new Intent(MainActivity.this, LoginActivity.class);
+        Intent intent = new Intent(MainActivity.this, MainActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(intent);
         finish();
