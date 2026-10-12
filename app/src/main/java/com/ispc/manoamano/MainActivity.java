@@ -22,6 +22,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.ispc.manoamano.adaptadores.OportunidadAdapter;
 import com.ispc.manoamano.modelos.Oportunidad;
+import com.ispc.manoamano.utilidades.NavegacionMensajes;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -191,12 +192,21 @@ public class MainActivity extends AppCompatActivity {
                 oportunidadesVisibles.isEmpty() ? View.VISIBLE : View.GONE);
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        NavegacionMensajes.actualizar(this, findViewById(R.id.bottomNavigation), R.id.nav_inicio);
+    }
+
     private void configurarNavegacion() {
         BottomNavigationView bottomNavigation = findViewById(R.id.bottomNavigation);
         bottomNavigation.setSelectedItemId(R.id.nav_inicio);
 
         bottomNavigation.setOnItemSelectedListener(item -> {
             int id = item.getItemId();
+            if (NavegacionMensajes.manejarSeleccion(this, id)) {
+                return true;
+            }
 
             // Revisa que 'nav_contacto' coincida exactamente con el id del item en tu bottom_navigation_menu.xml
             if (id == R.id.nav_contacto) {
