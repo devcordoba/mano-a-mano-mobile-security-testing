@@ -56,5 +56,11 @@
     <string name="mensajes_cargando">Cargando mensajes</string>
     <string name="mensajes_vacio_recibidos">No tenés mensajes recibidos.</string>
     <string name="mensajes_vacio_enviados">Todavía no enviaste mensajes.</string>
-
+    <string name="mensajes_responder_titulo">Responder a %1$s</string>
+    <string name="mensajes_hint_respuesta">Escribí tu mensaje</string>
+    <string name="mensajes_enviar">Enviar</string>
+    <string name="mensajes_cancelar">Cancelar</string>
+    <string name="mensajes_enviado">Mensaje enviado</string>
+    <string name="mensajes_error_vacio">El mensaje no puede estar vacío.</string>
+    <string name="mensajes_error_largo">El mensaje no puede superar los 1000 caracteres.</string>
 </resources>

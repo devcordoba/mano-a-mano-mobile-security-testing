@@ -6,10 +6,7 @@ public final class MensajeFormato {
         // Clase de utilidades: no se instancia
     }
 
-    /**
-     * Convierte "2026-10-11T19:44:12.123-03:00" en "11/10 19:44".
-     * Si el texto es nulo o no tiene el formato esperado, devuelve "".
-     */
+
     public static String formatearFecha(String fechaIso) {
         if (fechaIso == null || fechaIso.length() < 16 || fechaIso.charAt(10) != 'T') {
             return "";
@@ -20,11 +17,26 @@ public final class MensajeFormato {
         return dia + "/" + mes + " " + hora;
     }
 
-    /** Devuelve el nombre a mostrar, o "Usuario" si viene vacío. */
     public static String nombreVisible(String username) {
         if (username == null || username.trim().isEmpty()) {
             return "Usuario";
         }
         return username.trim();
+    }
+
+    public static final int MAX_CARACTERES_CUERPO = 1000;
+
+    public static final int CUERPO_OK = 0;
+    public static final int CUERPO_VACIO = 1;
+    public static final int CUERPO_DEMASIADO_LARGO = 2;
+
+    public static int validarCuerpo(String texto) {
+        if (texto == null || texto.trim().isEmpty()) {
+            return CUERPO_VACIO;
+        }
+        if (texto.trim().length() > MAX_CARACTERES_CUERPO) {
+            return CUERPO_DEMASIADO_LARGO;
+        }
+        return CUERPO_OK;
     }
 }
