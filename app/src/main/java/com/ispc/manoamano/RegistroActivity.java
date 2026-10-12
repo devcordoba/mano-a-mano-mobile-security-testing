@@ -115,9 +115,16 @@ public class RegistroActivity extends AppCompatActivity {
 
         if (password.length() < 8
                 || !password.matches(".*[A-Z].*")
-                || !password.matches(".*\\d.*")) {
-            etPassword.setError("Mínimo 8 caracteres, una mayúscula y un número");
+                || !password.matches(".*[a-z].*")
+                || !password.matches(".*\\d.*")
+                || !password.matches(".*[^A-Za-z0-9].*")) {
+            etPassword.setError(getString(R.string.registro_password_debil));
             etPassword.requestFocus();
+            Toast.makeText(
+                    this,
+                    R.string.registro_password_debil,
+                    Toast.LENGTH_LONG
+            ).show();
             return;
         }
 
