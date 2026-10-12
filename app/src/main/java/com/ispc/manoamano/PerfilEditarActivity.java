@@ -2,9 +2,11 @@ package com.ispc.manoamano;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -38,6 +40,7 @@ public class PerfilEditarActivity extends AppCompatActivity {
         }
 
         setContentView(R.layout.activity_perfil_editar);
+        Volver.conectar(this);
 
         authRepository = new AuthRepository(this);
 
@@ -46,12 +49,20 @@ public class PerfilEditarActivity extends AppCompatActivity {
         etEditarEmail = findViewById(R.id.etEditarEmail);
         etEditarUsername = findViewById(R.id.etEditarUsername);
         tvEditarRol = findViewById(R.id.tvEditarRol);
+        btnGuardarCambios = findViewById(R.id.btnGuardarCambios);
 
         // 1) Mostramos lo que ya tenemos guardado en el celu
         mostrarDatosGuardados();
 
         // 2) Pedimos los datos actualizados al servidor
         cargarPerfilDesdeApi();
+
+        // 3) Establecemos el click listener para nuestro boton de guardar cambios
+        btnGuardarCambios.setOnClickListener(v -> {
+            Toast.makeText(this, "Próximamente", Toast.LENGTH_SHORT).show();
+            finish();
+            }
+        );
     }
 
     private void mostrarDatosGuardados() {
@@ -72,10 +83,10 @@ public class PerfilEditarActivity extends AppCompatActivity {
                               String email, String rol) {
 
         // Validamos los datos que nos llegan desde el backend
-        if (nombre.isEmpty() || nombre != null) {
+        if (nombre.isEmpty()) {
             nombre = nombre != null ? username : "Nombre";
         }
-        if (apellido.isEmpty() || nombre != null) {
+        if (apellido.isEmpty()) {
             apellido = apellido != null ? username : "Apellido";
         }
 
@@ -88,10 +99,12 @@ public class PerfilEditarActivity extends AppCompatActivity {
     }
 
     private void cargarPerfilDesdeApi() {
+        findViewById(R.id.rueditaPerfil).setVisibility(View.VISIBLE);
         authRepository.perfil(new ApiCallback<PerfilResponse>(this) {
 
             @Override
             protected void onSuccess(PerfilResponse body) {
+                findViewById(R.id.rueditaPerfil).setVisibility(View.GONE);
                 if (isFinishing() || isDestroyed()) {
                     return;
                 }
@@ -125,16 +138,21 @@ public class PerfilEditarActivity extends AppCompatActivity {
 
             @Override
             protected void onError(int codigo) {
+                findViewById(R.id.rueditaPerfil).setVisibility(View.GONE);
                 // 401 = sesión vencida o inválida (ApiCallback ya borró la sesión)
                 if (codigo == 401 && !isFinishing()) {
                     irAlLogin();
                 }
             }
+
+            @Override
+            protected void onNetworkError(Throwable t) {
+                findViewById(R.id.rueditaPerfil).setVisibility(View.GONE);
+            }
         });
     }
 
     private void guardarDatos() {
-
     }
 
     // Lo mismo que en PerfilActivity
