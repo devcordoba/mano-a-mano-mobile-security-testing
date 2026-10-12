@@ -25,6 +25,8 @@ import com.ispc.manoamano.modelos.MensajeRequest;
 import com.ispc.manoamano.repositorios.MensajeRepository;
 import com.ispc.manoamano.utilidades.ApiCallback;
 import com.ispc.manoamano.utilidades.MensajeFormato;
+import com.ispc.manoamano.almacenamiento.MensajesVistosStore;
+import com.ispc.manoamano.utilidades.MensajesNoLeidos;
 
 import java.util.List;
 
@@ -104,6 +106,7 @@ public class MensajesActivity extends AppCompatActivity
                             return;
                         }
                         bandeja = body;
+                        marcarRecibidosComoVistos();
                         mostrarCargando(false);
                         mostrarPestanaActual();
                     }
@@ -134,7 +137,14 @@ public class MensajesActivity extends AppCompatActivity
         );
     }
 
-    /** Muestra la lista de la pestaña seleccionada, o el texto de bandeja vacía. */
+    private void marcarRecibidosComoVistos() {
+        if (bandeja == null) {
+            return;
+        }
+        int idMasReciente = MensajesNoLeidos.idMasReciente(bandeja.getRecibidos());
+        new MensajesVistosStore(this).guardarUltimoIdVisto(
+                sessionManager.obtenerUsuarioId(), idMasReciente);
+    }
     private void mostrarPestanaActual() {
         boolean recibidos = tabsMensajes.getSelectedTabPosition() == TAB_RECIBIDOS;
 
