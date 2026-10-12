@@ -134,6 +134,15 @@
                 android:textColor="@color/text_secondary"
                 android:textSize="14sp" />
 
+            <TextView
+                android:id="@+id/tvDetalleRequisitos"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:lineSpacingExtra="4dp"
+                android:textColor="@color/text_secondary"
+                android:textSize="14sp" />
+
             <Button
                 android:id="@+id/btnPostularse"
                 android:layout_width="match_parent"

@@ -1,47 +1,96 @@
 package com.ispc.manoamano.modelos;
 
-public class Oportunidad implements java.io.Serializable {
-    private final int id;
-    private final String titulo;
-    private final String ubicacion;
-    private final String organizacion;
-    private final String causa;
-    private final String tipoActividad;
-    private final String disponibilidad;
-    private final int cupos;
-    private final String fechaActividad;
-    private final boolean activa;
-    private final int imagenResId;
-    private final String resumen;
+import com.google.gson.annotations.SerializedName;
 
-    public Oportunidad(int id, String titulo, String ubicacion, String organizacion,
-                       String causa, String tipoActividad, String disponibilidad,
-                       int cupos, String fechaActividad, boolean activa,
-                       int imagenResId, String resumen) {
-        this.id = id;
-        this.titulo = titulo;
-        this.ubicacion = ubicacion;
-        this.organizacion = organizacion;
-        this.causa = causa;
-        this.tipoActividad = tipoActividad;
-        this.disponibilidad = disponibilidad;
-        this.cupos = cupos;
-        this.fechaActividad = fechaActividad;
-        this.activa = activa;
-        this.imagenResId = imagenResId;
-        this.resumen = resumen;
+import java.io.Serializable;
+
+public class Oportunidad implements Serializable {
+
+    private int id;
+
+    private String titulo;
+
+    private String descripcion;
+
+    private String requisitos;
+
+    private String ubicacion;
+
+    private Organizacion organizacion;
+
+    private Causa causa;
+
+    @SerializedName("tipo_actividad")
+    private TipoActividad tipoActividad;
+
+    private String disponibilidad;
+
+    private int cupos;
+
+    @SerializedName("fecha_actividad")
+    private String fechaActividad;
+
+    private boolean activa;
+
+    @SerializedName("imagen_url")
+    private String imagenUrl;
+
+    private String resumen;
+
+    @SerializedName("updated_at")
+    private String updatedAt;
+
+    public int getId() {
+        return id;
     }
 
-    public int getId() { return id; }
-    public String getTitulo() { return titulo; }
-    public String getUbicacion() { return ubicacion; }
-    public String getOrganizacion() { return organizacion; }
-    public String getCausa() { return causa; }
-    public String getTipoActividad() { return tipoActividad; }
-    public String getDisponibilidad() { return disponibilidad; }
-    public int getCupos() { return cupos; }
-    public String getFechaActividad() { return fechaActividad; }
-    public boolean isActiva() { return activa; }
-    public int getImagenResId() { return imagenResId; }
-    public String getResumen() { return resumen; }
+    public String getTitulo() {
+        return titulo;
+    }
+
+    public String getDescripcion() { return descripcion; }
+
+    public String getRequisitos() { return requisitos; }
+
+    public String getUbicacion() {
+        return ubicacion;
+    }
+
+    public Organizacion getOrganizacion() {
+        return organizacion;
+    }
+
+    public Causa getCausa() {
+        return causa;
+    }
+
+    public TipoActividad getTipoActividad() {
+        return tipoActividad;
+    }
+
+    public String getDisponibilidad() {
+        return disponibilidad;
+    }
+
+    public int getCupos() {
+        return cupos;
+    }
+
+    public String getFechaActividad() {
+        return fechaActividad;
+    }
+
+    public boolean isActiva() {
+        return activa;
+    }
+
+    public String getImagenUrl() {
+        return imagenUrl;
+    }
+
+    public String getResumen() {
+        return resumen != null ? resumen : descripcion;
+    }
+
+    public String getUpdatedAt() { return updatedAt; }
 }
