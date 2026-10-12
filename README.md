@@ -225,7 +225,7 @@ git clone https://github.com/devcordoba/mano-a-mano-mobile-security-testing.git
 
 - **Lanfranco Darel Caballero**
 - **Gonzalo Quiroga**
-- **Gabriel Nata**
+- **Gabriel Natale**
 - **Lucas Monzón**
 - **Ivo Konstantinow**
 - **Tomás Huespe**
