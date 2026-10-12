@@ -4,10 +4,15 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/background"
-    android:gravity="center"
+    android:gravity="center_horizontal"
     android:orientation="vertical"
-    android:padding="32dp"
+    android:paddingStart="32dp"
+    android:paddingTop="8dp"
+    android:paddingEnd="32dp"
+    android:paddingBottom="32dp"
     tools:context=".LoginActivity">
+
+    <include layout="@layout/barra_volver" />
 
     <!-- Logo -->
     <ImageView
@@ -40,6 +45,15 @@
         android:textColor="@color/text_secondary"
         android:textSize="14sp" />
 
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="6dp"
+        android:text="@string/login_hint_usuario"
+        android:textColor="@color/text_secondary"
+        android:textSize="14sp"
+        android:textStyle="bold" />
+
     <!-- Campo: usuario -->
     <EditText
         android:id="@+id/etUsuarioLogin"
@@ -56,6 +70,15 @@
         android:paddingEnd="16dp"
         android:textColor="@color/text_primary"
         android:textSize="15sp" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="6dp"
+        android:text="@string/login_hint_password"
+        android:textColor="@color/text_secondary"
+        android:textSize="14sp"
+        android:textStyle="bold" />
 
     <!-- Campo: contraseña -->
     <EditText
@@ -85,6 +108,14 @@
         android:textColor="@color/white"
         android:textSize="15sp"
         android:textStyle="bold" />
+
+    <include
+        android:id="@+id/rueditaLogin"
+        layout="@layout/ruedita"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="16dp" />
 
     <!-- Enlace a registro -->
     <TextView
