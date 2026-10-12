@@ -21,7 +21,7 @@
             <TextView
                 android:id="@+id/tabOrgDatos"
                 android:layout_width="wrap_content"
-                android:layout_height="36dp"
+                android:layout_height="48dp"
                 android:background="@drawable/boton_primario"
                 android:clickable="true"
                 android:focusable="true"
@@ -36,7 +36,7 @@
             <TextView
                 android:id="@+id/tabOrgPublicar"
                 android:layout_width="wrap_content"
-                android:layout_height="36dp"
+                android:layout_height="48dp"
                 android:layout_marginStart="8dp"
                 android:background="@drawable/button_login"
                 android:clickable="true"
@@ -52,7 +52,7 @@
             <TextView
                 android:id="@+id/tabOrgOfertas"
                 android:layout_width="wrap_content"
-                android:layout_height="36dp"
+                android:layout_height="48dp"
                 android:layout_marginStart="8dp"
                 android:background="@drawable/button_login"
                 android:clickable="true"
@@ -68,7 +68,7 @@
             <TextView
                 android:id="@+id/tabOrgPostulantes"
                 android:layout_width="wrap_content"
-                android:layout_height="36dp"
+                android:layout_height="48dp"
                 android:layout_marginStart="8dp"
                 android:background="@drawable/button_login"
                 android:clickable="true"
@@ -98,7 +98,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                android:padding="16dp">
+                android:padding="16dp"
+                android:paddingBottom="88dp">
 
                 <TextView
                     android:layout_width="match_parent"
@@ -119,7 +120,7 @@
                 <EditText
                     android:id="@+id/editOrgNombre"
                     android:layout_width="match_parent"
-                    android:layout_height="40dp"
+                    android:layout_height="48dp"
                     android:layout_marginTop="4dp"
                     android:background="@drawable/input_background"
                     android:hint="Nombre público"
@@ -139,7 +140,7 @@
                 <EditText
                     android:id="@+id/editOrgEmail"
                     android:layout_width="match_parent"
-                    android:layout_height="40dp"
+                    android:layout_height="48dp"
                     android:layout_marginTop="4dp"
                     android:background="@drawable/input_background"
                     android:hint="Email de contacto"
@@ -180,7 +181,7 @@
                 <EditText
                     android:id="@+id/editOrgTelefono"
                     android:layout_width="match_parent"
-                    android:layout_height="40dp"
+                    android:layout_height="48dp"
                     android:layout_marginTop="4dp"
                     android:background="@drawable/input_background"
                     android:hint="Teléfono (opcional)"
@@ -200,7 +201,7 @@
                 <EditText
                     android:id="@+id/editOrgSitio"
                     android:layout_width="match_parent"
-                    android:layout_height="40dp"
+                    android:layout_height="48dp"
                     android:layout_marginTop="4dp"
                     android:background="@drawable/input_background"
                     android:hint="Sitio web (opcional)"
@@ -212,7 +213,7 @@
                 <TextView
                     android:id="@+id/btnGuardarOrg"
                     android:layout_width="match_parent"
-                    android:layout_height="44dp"
+                    android:layout_height="48dp"
                     android:layout_marginTop="12dp"
                     android:background="@drawable/boton_primario"
                     android:clickable="true"
@@ -225,7 +226,7 @@
                 <TextView
                     android:id="@+id/btnEliminarOrg"
                     android:layout_width="match_parent"
-                    android:layout_height="44dp"
+                    android:layout_height="48dp"
                     android:layout_marginTop="8dp"
                     android:background="@drawable/bg_boton_peligro"
                     android:clickable="true"
@@ -249,7 +250,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                android:padding="16dp">
+                android:padding="16dp"
+                android:paddingBottom="88dp">
 
                 <TextView
                     android:layout_width="match_parent"
@@ -270,7 +272,7 @@
                 <EditText
                     android:id="@+id/editPubTitulo"
                     android:layout_width="match_parent"
-                    android:layout_height="40dp"
+                    android:layout_height="48dp"
                     android:layout_marginTop="4dp"
                     android:background="@drawable/input_background"
                     android:hint="Título"
@@ -311,7 +313,7 @@
                 <EditText
                     android:id="@+id/editPubUbicacion"
                     android:layout_width="match_parent"
-                    android:layout_height="40dp"
+                    android:layout_height="48dp"
                     android:layout_marginTop="4dp"
                     android:background="@drawable/input_background"
                     android:hint="Ubicación"
@@ -331,7 +333,7 @@
                 <EditText
                     android:id="@+id/editPubDisponibilidad"
                     android:layout_width="match_parent"
-                    android:layout_height="40dp"
+                    android:layout_height="48dp"
                     android:layout_marginTop="4dp"
                     android:background="@drawable/input_background"
                     android:hint="Disponibilidad"
@@ -351,7 +353,7 @@
                 <EditText
                     android:id="@+id/editPubCupos"
                     android:layout_width="match_parent"
-                    android:layout_height="40dp"
+                    android:layout_height="48dp"
                     android:layout_marginTop="4dp"
                     android:background="@drawable/input_background"
                     android:hint="Cupos"
@@ -371,7 +373,7 @@
                 <Spinner
                     android:id="@+id/spinnerPubCausa"
                     android:layout_width="match_parent"
-                    android:layout_height="40dp"
+                    android:layout_height="48dp"
                     android:background="@drawable/input_background" />
 
                 <TextView
@@ -385,7 +387,7 @@
                 <Spinner
                     android:id="@+id/spinnerPubTipo"
                     android:layout_width="match_parent"
-                    android:layout_height="40dp"
+                    android:layout_height="48dp"
                     android:background="@drawable/input_background" />
 
                 <TextView
@@ -423,7 +425,7 @@
                     <TextView
                         android:id="@+id/btnElegirImagen"
                         android:layout_width="wrap_content"
-                        android:layout_height="40dp"
+                        android:layout_height="48dp"
                         android:background="@drawable/button_login"
                         android:clickable="true"
                         android:focusable="true"
@@ -437,7 +439,7 @@
                     <TextView
                         android:id="@+id/btnQuitarImagen"
                         android:layout_width="wrap_content"
-                        android:layout_height="40dp"
+                        android:layout_height="48dp"
                         android:layout_marginStart="8dp"
                         android:clickable="true"
                         android:focusable="true"
@@ -491,7 +493,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                android:padding="16dp">
+                android:padding="16dp"
+                android:paddingBottom="88dp">
 
                 <TextView
                     android:layout_width="match_parent"
@@ -530,7 +533,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                android:padding="16dp">
+                android:padding="16dp"
+                android:paddingBottom="88dp">
 
                 <TextView
                     android:layout_width="match_parent"
