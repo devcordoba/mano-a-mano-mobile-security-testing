@@ -8,6 +8,13 @@
         android:id="@+id/nav_perfil"
         android:icon="@android:drawable/ic_menu_myplaces"
         android:title="Perfil" />
+
+    <item
+        android:id="@+id/nav_mensajes"
+        android:icon="@drawable/ic_mensajes"
+        android:title="@string/mensajes_titulo"
+        android:visible="false" />
+
     <item
         android:id="@+id/nav_contacto"
         android:enabled="true"

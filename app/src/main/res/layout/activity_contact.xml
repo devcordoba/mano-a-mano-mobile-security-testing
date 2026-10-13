@@ -9,8 +9,11 @@
     android:orientation="vertical"
     tools:context=".ContactActivity">
 
+    <include layout="@layout/barra_volver" />
+
     <!-- Contenido -->
     <ScrollView
+        android:id="@+id/scrollContacto"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
@@ -233,8 +236,10 @@
                 android:id="@+id/formularioContacto"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
+                android:layout_marginTop="12dp"
+                android:background="@drawable/contacto_card_background"
                 android:orientation="vertical"
+                android:padding="16dp"
                 android:visibility="gone">
 
                 <TextView
@@ -369,6 +374,14 @@
                     app:backgroundTint="@color/boton_primario_fondo"
                     app:cornerRadius="12dp" />
 
+                <include
+                    android:id="@+id/rueditaContacto"
+                    layout="@layout/ruedita"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginTop="12dp" />
+
             </LinearLayout>
         </LinearLayout>
 
@@ -381,6 +394,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/navbar_background"
+        app:itemIconTint="@color/nav_item"
+        app:itemTextColor="@color/nav_item"
         app:labelVisibilityMode="labeled"
         app:menu="@menu/bottom_navigation_menu" />
 
