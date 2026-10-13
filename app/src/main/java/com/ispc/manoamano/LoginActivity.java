@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -20,6 +21,7 @@ public class LoginActivity extends AppCompatActivity {
 
     private EditText etUsuario;
     private EditText etPassword;
+    private CheckBox checkMantenerSesion;
     private Button btnIngresar;
     private TextView tvIrRegistro;
 
@@ -34,6 +36,7 @@ public class LoginActivity extends AppCompatActivity {
 
         etUsuario = findViewById(R.id.etUsuarioLogin);
         etPassword = findViewById(R.id.etPasswordLogin);
+        checkMantenerSesion = findViewById(R.id.checkMantenerSesion);
         btnIngresar = findViewById(R.id.btnIngresarLogin);
         tvIrRegistro = findViewById(R.id.tvIrRegistroLogin);
 
@@ -101,6 +104,7 @@ public class LoginActivity extends AppCompatActivity {
                                 ? null
                                 : response.getUser().getPerfil().getRol();
 
+                        sessionManager.guardarMantenerSesion(checkMantenerSesion.isChecked());
                         sessionManager.guardarToken(
                                 response.getToken()
                         );
