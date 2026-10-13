@@ -1,78 +1,94 @@
 # Mano a Mano Mobile
 
-Aplicación móvil nativa para Android desarrollada por estudiantes del **ISPC** para el proyecto **Mano a Mano**, una plataforma creada para conectar a personas interesadas en realizar voluntariado con organizaciones que ofrecen oportunidades de participación.
+Aplicación móvil nativa para Android desarrollada por estudiantes del **ISPC** para el proyecto **Mano a Mano**, una plataforma que conecta a personas interesadas en realizar voluntariado con organizaciones que publican oportunidades de participación.
+
+| Tipo | Info |
+|---|---|
+| Organización | [devcordoba](https://github.com/devcordoba) |
+| Repositorio app | [mano-a-mano-mobile-security-testing](https://github.com/devcordoba/mano-a-mano-mobile-security-testing) |
+| Backend / API web | [mano-a-mano](https://github.com/devcordoba/mano-a-mano) |
+| API desplegada | https://mano-a-mano-deploy.vercel.app/ |
+| Wiki | [Wiki del proyecto](https://github.com/devcordoba/mano-a-mano-mobile-security-testing/wiki) |
+| minSdk / targetSdk | 24 / 33 |
 
 ---
 
-## Estado del Proyecto: Sprint 1
+## Estado del Proyecto: Sprint 2 (Evidencia 3)
 
-El repositorio refleja la entrega correspondiente al **Sprint 1**, centrada en la construcción de la base de la aplicación móvil, sus interfaces, identidad visual y navegación.
+El incremento del **Sprint 2** integra la app con la **API REST** (Django), autenticación **JWT**, persistencia remota, CRUD de organización/ofertas, perfil, mensajes, contacto, validación de contraseñas, pruebas automatizadas y criterios de accesibilidad.
 
 ### Implementado
 
-- **Splash:** pantalla inicial de la aplicación.
-- **Login:** interfaz de inicio de sesión.
-- **Registro:** interfaz para el registro de usuarios.
-- **Catálogo de oportunidades:** pantalla principal con oportunidades representadas mediante datos de ejemplo.
-- **Detalle de oportunidad:** consulta de la información correspondiente a una oportunidad seleccionada.
-- **Transferencia de información:** envío de información de una oportunidad entre Activities.
-- **Navegación:** navegación entre las diferentes pantallas y regreso a la pantalla anterior.
-- **Contacto:** pantalla con información de contacto.
-- **Identidad visual:** aplicación de logo, colores, tipografías y componentes visuales definidos para el proyecto.
+- **Splash:** pantalla inicial y entrada al flujo.
+- **Login JWT:** autenticación real contra el backend; mensaje ante credenciales incorrectas; sesión local.
+- **Registro:** alta de usuario con contraseña robusta (más de 8 caracteres, mayúscula, minúscula, número y símbolo) y email válido.
+- **Inicio (Main):** listado de oportunidades **desde la API**, búsqueda y filtros; indicador de carga.
+- **Detalle y postulación:** traspaso de datos entre Activities; postulación autenticada.
+- **Perfil:** datos del usuario logueado; sin sesión redirige a Login y al volver regresa a Inicio.
+- **Mensajes:** bandeja, lectura, respuesta e indicador de no leídos.
+- **Contacto:** formulario validado y envío persistido en el backend; email/teléfono del proyecto.
+- **Organización:** alta/edición de datos de la organización y **CRUD de ofertas** (crear, editar, pausar/activar, eliminar, imagen).
+- **Roles:** experiencia distinta para visitante, voluntario y organización.
+- **Seguridad en cliente:** token Bearer en requests protegidas; HTTPS hacia el deploy.
+- **Ayuda / multimedia:** panel de ayuda y recursos de imagen en la app.
+- **Accesibilidad básica:** botones más cómodos de tocar y mejora de foco (US15).
+- **Testing:** suite unitaria JVM (JUnit); dependencias Mockito, MockWebServer, Espresso y Accessibility en el módulo `app`.
 
-### Próximos Sprints
+### Enlaces útiles
 
-Las funcionalidades de integración y persistencia serán desarrolladas en las siguientes etapas del proyecto, incluyendo:
-
-- Conexión con servicio web mediante API REST.
-- Obtención de datos reales.
-- Persistencia de información.
-- Operaciones CRUD.
-- Autenticación funcional.
-- Gestión de sesiones.
-- JWT.
-- Roles y permisos.
-- Integración con el backend Django.
+- Wiki Home (ceremonias Sprint 1 y 2): https://github.com/devcordoba/mano-a-mano-mobile-security-testing/wiki
+- Testing: https://github.com/devcordoba/mano-a-mano-mobile-security-testing/wiki/Testing
+- Ciberseguridad: https://github.com/devcordoba/mano-a-mano-mobile-security-testing/wiki/Ciberseguridad
+- IEEE 830: https://github.com/devcordoba/mano-a-mano-mobile-security-testing/wiki/Documento-IEEE-830
+- Capturas: https://drive.google.com/drive/folders/1YjRzEcMS7n03S60pWMc-MJunL5j6ramy?usp=sharing
+- Milestone Sprint 2: https://github.com/devcordoba/mano-a-mano-mobile-security-testing/milestone/2
 
 ---
 
-## Funcionalidades Implementadas
+## Funcionalidades
 
-### Pantalla Splash
+### Splash
 
-La aplicación cuenta con una pantalla inicial **Splash**, que constituye el punto de entrada al sistema y permite iniciar el flujo de navegación de la aplicación.
+Punto de entrada. Tras unos segundos continúa hacia **Main**.
 
-### Inicio de Sesión
+### Login y sesión
 
-La pantalla de **Login** permite visualizar los campos y controles necesarios para el acceso de un usuario.
-
-En el Sprint 1 se implementó la interfaz y su navegación. La validación contra un servidor y la autenticación real serán incorporadas posteriormente.
+- Usuario y contraseña validados contra la API.
+- Ante error: mensaje *Usuario y/o contraseña incorrecta.*
+- Token JWT guardado en sesión local y enviado en `Authorization: Bearer …`.
+- Cerrar sesión vuelve a modo visitante en Inicio.
 
 ### Registro
 
-La aplicación dispone de una pantalla de **Registro** para representar el proceso de creación de una cuenta.
+Alta de cuenta con validación de email y política de contraseña segura. Con datos válidos se puede iniciar sesión.
 
-El usuario puede acceder a esta pantalla desde Login y regresar nuevamente al inicio de sesión.
+### Inicio – oportunidades
 
-### Visualización de Oportunidades
+Lista oportunidades publicadas en el servidor (no datos de ejemplo). Incluye búsqueda/filtros e indicador de carga. Ante fallo de red la pantalla permanece usable.
 
-La pantalla **Main** permite visualizar oportunidades de voluntariado mediante datos de ejemplo.
+### Detalle y postulación
 
-Cada oportunidad presenta información que permite identificarla y seleccionarla para consultar posteriormente su detalle.
+Al tocar una oportunidad se abre el detalle con la información transferida. Con sesión se puede postular; sin sesión se solicita Login.
 
-### Detalle de Oportunidad
+### Perfil
 
-Al seleccionar una oportunidad desde la pantalla principal, se accede a la pantalla **Detalle**.
+Muestra nombre, correo y rol del usuario autenticado. Sin sesión abre Login; al cancelar se regresa a Inicio sin cerrar la app.
 
-La información de la oportunidad seleccionada es transferida entre Activities y presentada en la pantalla correspondiente.
+### Mensajes
 
-El usuario puede regresar desde Detalle hacia Main.
+Bandeja de conversaciones, lectura del hilo, envío de respuestas y aviso de mensajes no leídos en el menú.
 
 ### Contacto
 
-La aplicación cuenta con una pantalla **Contacto**, donde se presenta información relacionada con los medios de contacto definidos para el proyecto.
+Formulario con nombre, email, asunto y mensaje. Valida campos y persiste la consulta en el backend. También ofrece email y teléfono del proyecto.
 
-La pantalla se encuentra integrada al flujo de navegación de la aplicación.
+### Organización y ofertas (CRUD)
+
+Con rol organización: guardar datos de la organización; publicar, editar, pausar/activar y eliminar ofertas (incluye imagen cuando corresponde).
+
+### Ayuda
+
+Panel de ayuda accesible desde la navegación, con contenido de uso de la app.
 
 ---
 
@@ -80,153 +96,171 @@ La pantalla se encuentra integrada al flujo de navegación de la aplicación.
 
 ```text
 ┌───────────────────────────────┐
-│      INICIO DE LA APP         │
+│        INICIO DE LA APP       │
 └───────────────┬───────────────┘
                 │
                 ▼
 ┌───────────────────────────────┐
-│        SPLASH ACTIVITY        │
-│        espera 3 segundos      │
+│       SPLASH ACTIVITY         │
+│         (breve espera)        │
 └───────────────┬───────────────┘
                 │
                 ▼
-┌──────────────────────────────────────────┐
-│              PANTALLA MAIN               │
-│                                          │
-│  Usuario: visitante                      │
-│  - Listado de oportunidades de ejemplo   │
-│  - Buscador                              │
-│  - Filtro por causa                      │
-│  - Filtro por actividad                  │
-└───────┬────────────────┬─────────────────┘
-        │                │
-        │                └── Menú inferior: Contacto
-        │                                │
-        │                                ▼
-        │               ┌─────────────────────────────┐
-        │               │          CONTACTO           │
-        │               │                             │
-        │               │  ├─ Email → app de correo   │
-        │               │  ├─ Teléfono → marcador     │
-        │               │  ├─ Mostrar formulario      │
-        │               │  └─ Enviar mensaje          │
-        │               │       │                     │
-        │               │       ├─ Campos vacíos       │
-        │               │       │   → mostrar error    │
-        │               │       │                     │
-        │               │       └─ Campos completos    │
-        │               │           → mostrar éxito   │
-        │               └──────────────┬──────────────┘
-        │                              │
-        │                         Inicio
-        │                              │
-        │                              └──────► MAIN
-        │
-        ├── Seleccionar oportunidad
-        │              │
-        │              ▼
-        │   ┌──────────────────────────────┐
-        │   │    DETALLE DE OPORTUNIDAD    │
-        │   │                              │
-        │   │  - Datos de la oportunidad   │
-        │   │  - Botón "Postularse"        │
-        │   │  - Botón "Volver"            │
-        │   └──────────┬───────────┬───────┘
-        │              │           │
-        │       Postularse       Volver
-        │              │           │
-        │              ▼           └──────────► MAIN
-        │   ┌──────────────────────────────┐
-        │   │ Mensaje: postulación enviada │
-        │   └──────────────────────────────┘
-        │
-        └── Seleccionar "Iniciar sesión"
-                       │
-                       ▼
-            ┌───────────────────────────┐
-            │           LOGIN           │
-            │                           │
-            │  Usuario                  │
-            │  Contraseña               │
-            └──────┬─────────────┬──────┘
-                   │             │
-              Ingresar       Registrarse
-                   │             │
-                   ▼             ▼
-          ┌──────────────┐  ┌──────────────────────┐
-          │ ¿Hay campos  │  │       REGISTRO       │
-          │   vacíos?    │  │                      │
-          └───┬──────┬───┘  │ - Usuario            │
-              │      │      │ - Email              │
-             Sí      No     │ - Contraseña         │
-              │      │      │ - Nombre             │
-              ▼      ▼      │ - Apellido           │
-        ┌─────────┐ ┌─────────────────────┐
-        │ Toast:  │ │ MAIN autenticado    │
-        │complete │ │                     │
-        │ campos  │ │ "Bienvenido, user"  │
-        └─────────┘ │ "Cerrar sesión" (*) │
-                    └─────────────────────┘
-                              ▲
-                              │
-                     ┌────────┴─────────┐
-                     │ ¿Registro válido?│
-                     └────┬────────┬────┘
-                          │        │
-                  Vacíos  │        │ Completos
-                          ▼        ▼
-                    ┌─────────┐  ┌────────────┐
-                    │ Toast:  │  │   LOGIN    │
-                    │complete │  └────────────┘
-                    │ campos  │
-                    └─────────┘
+┌──────────────────────────────────────────────┐
+│                   MAIN                       │
+│  Visitante o usuario autenticado             │
+│  - Oportunidades desde API                   │
+│  - Buscador / filtros                        │
+│  - Menú: Inicio · Mensajes* · Perfil* · …    │
+│  - Contacto · Ayuda · Iniciar sesión / Salir │
+└───┬──────────┬──────────┬──────────┬─────────┘
+    │          │          │          │
+    │          │          │          └── Contacto
+    │          │          │                 │
+    │          │          │                 ▼
+    │          │          │        ┌─────────────────┐
+    │          │          │        │    CONTACTO     │
+    │          │          │        │ Formulario API  │
+    │          │          │        │ Email / Teléfono│
+    │          │          │        └────────┬────────┘
+    │          │          │                 │
+    │          │          │                 └──► MAIN
+    │          │          │
+    │          │          └── Perfil*
+    │          │                   │
+    │          │          ┌────────┴────────┐
+    │          │          │ ¿Hay sesión?    │
+    │          │          └───┬─────────┬───┘
+    │          │             Sí        No
+    │          │              │         │
+    │          │              ▼         ▼
+    │          │        ┌─────────┐  ┌────────┐
+    │          │        │ PERFIL  │  │ LOGIN  │
+    │          │        │ datos   │  │ (atrás │
+    │          │        │ rol     │  │ → MAIN)│
+    │          │        │ org.**  │  └───┬────┘
+    │          │        └────┬────┘      │
+    │          │             │      Ingresar OK
+    │          │             │           │
+    │          │             └───────────┴──► MAIN auth
+    │          │
+    │          └── Mensajes* ──► BANDEJA ──► HILO ──► responder
+    │
+    ├── Seleccionar oportunidad
+    │              │
+    │              ▼
+    │   ┌──────────────────────────────┐
+    │   │     DETALLE OPORTUNIDAD      │
+    │   │  datos + Postularse / Volver │
+    │   └──────────┬───────────┬───────┘
+    │              │           │
+    │         Postularse     Volver ──► MAIN
+    │              │
+    │     ┌────────┴────────┐
+    │     │ ¿Sesión?        │
+    │     └───┬─────────┬───┘
+    │        Sí        No ──► LOGIN
+    │         │
+    │         ▼
+    │   Confirmación postulación (API)
+    │
+    └── Iniciar sesión / Registrarse
+                   │
+                   ▼
+        ┌────────────────────┐
+        │       LOGIN        │
+        │  JWT + sesión      │
+        └───┬───────────┬────┘
+            │           │
+       Ingresar    Registrarse
+            │           │
+            ▼           ▼
+     MAIN auth     REGISTRO
+                   (clave segura)
+                        │
+                        └──► LOGIN ──► MAIN auth
+
+(*) Requiere sesión. Sin sesión → Login.
+(**) Organización: panel Mi organización + CRUD de ofertas.
 ```
 
-## 🛠️ Stack Tecnológico
+### Flujo resumido por rol
 
-| Componente | Detalle |
-| :--- | :--- |
-| **Plataforma** | Android Nativo |
-| **Lenguaje** | Java |
-| **Paquete Base** | `com.ispc.manoamano` |
-| **IDE** | Android Studio |
-| **Build** | Gradle |
-| **Control de Versiones** | Git & GitHub |
-| **Modelo de Branching** | Gitflow |
+| Rol | Qué puede hacer |
+|---|---|
+| Visitante | Ver oportunidades, detalle, contacto, ir a login/registro |
+| Voluntario | Todo lo de visitante + perfil, postularse, mensajes |
+| Organización | Perfil + datos de organización + CRUD de ofertas + mensajes |
 
 ---
 
-## 🚀 Compilación y Ejecución
+## Stack tecnológico
+
+| Componente | Detalle |
+|---|---|
+| Plataforma | Android nativo |
+| Lenguaje | Java |
+| Red | Retrofit + OkHttp + Gson |
+| Auth | JWT (header `Authorization: Bearer`) |
+| Testing | JUnit, Mockito, MockWebServer, Espresso, Accessibility |
+| Build | Gradle / Android Studio |
+| Branching | Gitflow |
+
+---
+
+## Configuración de la API
+
+En debug, la URL base apunta al backend desplegado:
+
+```text
+https://mano-a-mano-deploy.vercel.app/
+```
+
+---
+
+## Compilación y ejecución
 
 ### Requisitos
 
-- Android Studio.
-- Android SDK.
-- JDK compatible con el proyecto.
-- Emulador Android o dispositivo físico.
+- Android Studio
+- Android SDK
+- JDK compatible con el proyecto
+- Dispositivo físico (Android 7+ / API 24+)
 
-### Clonar el repositorio
+### Clonar
 
 ```bash
 git clone https://github.com/devcordoba/mano-a-mano-mobile-security-testing.git
+cd mano-a-mano-mobile-security-testing
 ```
 
-### Abrir el proyecto
+### Abrir y ejecutar
 
-1. Abrir **Android Studio**.
-2. Seleccionar **Open**.
-3. Seleccionar la carpeta raíz del proyecto.
-4. Esperar la sincronización de Gradle.
-5. Conectar un emulador o dispositivo Android.
-6. Ejecutar la aplicación mediante **Run**.
+1. Abrir el proyecto en Android Studio.
+2. Esperar la sincronización de Gradle.
+3. Conectar emulador o dispositivo.
+4. Ejecutar con **Run**.
+
+### Pruebas
+
+```bash
+# Unitarias (JVM)
+./gradlew test
+
+# Instrumentadas (emulador/dispositivo)
+./gradlew connectedAndroidTest
+```
+
 ---
 
-## 👥 Equipo de Desarrollo
+## Equipo de desarrollo
 
-- **Lanfranco Darel Caballero**
-- **Gonzalo Quiroga**
-- **Gabriel Natale**
-- **Lucas Monzón**
-- **Ivo Konstantinow**
-- **Tomás Huespe**
-- **Kevin Agustín Astrada**
+| Nombre | Rol |
+|---|---|
+| Lanfranco Darel Caballero | Scrum Master / Developer |
+| Gonzalo Quiroga | Product Owner / Developer |
+| Gabriel Natale | Developer |
+| Lucas Monzón | Developer |
+| Ivo Konstantinow | Developer |
+| Tomás Huespe | Developer |
+| Kevin Agustín Astrada | Developer |
