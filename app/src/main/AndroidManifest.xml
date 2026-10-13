@@ -25,18 +25,19 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Manoamano"
         tools:targetApi="31">
-
+        <activity
+            android:name=".PerfilEditarActivity"
+            android:exported="false" />
         <!-- SPLASH -->
         <activity
             android:name=".SplashActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-        </activity>
-
-        <!-- PANTALLA PRINCIPAL -->
+        </activity> <!-- PANTALLA PRINCIPAL -->
         <activity
             android:name=".MainActivity"
             android:exported="false"
@@ -45,29 +46,19 @@
         <!-- LOGIN -->
         <activity
             android:name=".LoginActivity"
-            android:exported="false" />
-
-        <!-- REGISTRO -->
+            android:exported="false" /> <!-- REGISTRO -->
         <activity
             android:name=".RegistroActivity"
-            android:exported="false" />
-
-        <!-- DETALLE DE OPORTUNIDAD -->
+            android:exported="false" /> <!-- DETALLE DE OPORTUNIDAD -->
         <activity
             android:name=".DetalleOportunidadActivity"
-            android:exported="false" />
-
-        <!-- CONTACTO -->
+            android:exported="false" /> <!-- CONTACTO -->
         <activity
             android:name=".ContactActivity"
-            android:exported="false" />
-
-        <!-- PERFIL ACTIVITY -->
+            android:exported="false" /> <!-- PERFIL ACTIVITY -->
         <activity
             android:name=".PerfilActivity"
-            android:exported="false" />
-
-        <!-- MENSAJES -->
+            android:exported="false" /> <!-- MENSAJES -->
         <activity
             android:name=".MensajesActivity"
             android:exported="false" />
