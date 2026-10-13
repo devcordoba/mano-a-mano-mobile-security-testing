@@ -58,11 +58,7 @@ public class PerfilEditarActivity extends AppCompatActivity {
         cargarPerfilDesdeApi();
 
         // 3) Establecemos el click listener para nuestro boton de guardar cambios
-        btnGuardarCambios.setOnClickListener(v -> {
-            Toast.makeText(this, "Próximamente", Toast.LENGTH_SHORT).show();
-            finish();
-            }
-        );
+        btnGuardarCambios.setOnClickListener(v -> guardarDatos());
     }
 
     private void mostrarDatosGuardados() {
@@ -153,6 +149,27 @@ public class PerfilEditarActivity extends AppCompatActivity {
     }
 
     private void guardarDatos() {
+        String nombre = valor(etEditarNombre);
+        String apellido = valor(etEditarApellido);
+        String username = valor(etEditarUsername);
+        String email = valor(etEditarEmail);
+
+        if (nombre.isEmpty() || apellido.isEmpty() || username.isEmpty() || email.isEmpty()) {
+            Toast.makeText(this,
+                    "Por favor completa los campos vacios antes de guardar tus cambios.",
+                    Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        // Falta conectar con la API para hacer el recurso PATCH
+        sessionManager.guardarUsuario(
+                sessionManager.obtenerUsuarioId(),
+                username,
+                nombre,
+                apellido,
+                email,
+                sessionManager.obtenerRol()
+        );
     }
 
     // Lo mismo que en PerfilActivity
@@ -161,5 +178,13 @@ public class PerfilEditarActivity extends AppCompatActivity {
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(intent);
         finish();
+    }
+
+    private static String valor(EditText edit) {
+        return edit.getText() == null ? "" : edit.getText().toString().trim();
+    }
+
+    private static String texto(String valor) {
+        return valor == null ? "" : valor;
     }
 }
