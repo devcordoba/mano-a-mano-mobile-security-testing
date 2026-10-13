@@ -2,15 +2,20 @@ package com.ispc.manoamano;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Patterns;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ProgressBar;
+import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.ispc.manoamano.almacenamiento.SessionManager;
+import com.ispc.manoamano.modelos.Perfil;
+import com.ispc.manoamano.modelos.PerfilActualizacionRequest;
 import com.ispc.manoamano.modelos.PerfilResponse;
 import com.ispc.manoamano.modelos.Usuario;
 import com.ispc.manoamano.repositorios.AuthRepository;
@@ -20,12 +25,19 @@ public class PerfilEditarActivity extends AppCompatActivity {
 
     private SessionManager sessionManager;
     private AuthRepository authRepository;
+
+    private TextView tvUsuarioFijo;
     private EditText etEditarNombre;
     private EditText etEditarApellido;
-    private EditText etEditarUsername;
     private EditText etEditarEmail;
-    private TextView tvEditarRol;
+    private EditText etEditarTelefono;
+    private EditText etEditarIntereses;
+    private EditText etEditarDisponibilidad;
+    private EditText etPasswordActual;
+    private EditText etPasswordNueva;
+    private ProgressBar ruedita;
     private Button btnGuardarCambios;
+    private ScrollView scrollPerfil;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,7 +45,6 @@ public class PerfilEditarActivity extends AppCompatActivity {
 
         sessionManager = new SessionManager(this);
 
-        // Si no hay sesión iniciada, mandamos al Login
         if (!sessionManager.tieneSesion()) {
             irAlLogin();
             return;
@@ -44,63 +55,50 @@ public class PerfilEditarActivity extends AppCompatActivity {
 
         authRepository = new AuthRepository(this);
 
+        scrollPerfil = findViewById(R.id.scrollPerfilEditar);
+        tvUsuarioFijo = findViewById(R.id.tvUsuarioFijo);
         etEditarNombre = findViewById(R.id.etEditarNombre);
         etEditarApellido = findViewById(R.id.etEditarApellido);
         etEditarEmail = findViewById(R.id.etEditarEmail);
-        etEditarUsername = findViewById(R.id.etEditarUsername);
-        tvEditarRol = findViewById(R.id.tvEditarRol);
+        etEditarTelefono = findViewById(R.id.etEditarTelefono);
+        etEditarIntereses = findViewById(R.id.etEditarIntereses);
+        etEditarDisponibilidad = findViewById(R.id.etEditarDisponibilidad);
+        etPasswordActual = findViewById(R.id.etPasswordActual);
+        etPasswordNueva = findViewById(R.id.etPasswordNueva);
+        ruedita = findViewById(R.id.rueditaPerfil);
         btnGuardarCambios = findViewById(R.id.btnGuardarCambios);
 
-        // 1) Mostramos lo que ya tenemos guardado en el celu
-        mostrarDatosGuardados();
-
-        // 2) Pedimos los datos actualizados al servidor
+        precargarDesdeSesion();
         cargarPerfilDesdeApi();
-
-        // 3) Establecemos el click listener para nuestro boton de guardar cambios
         btnGuardarCambios.setOnClickListener(v -> guardarDatos());
     }
 
-    private void mostrarDatosGuardados() {
-        String nombre = sessionManager.obtenerFirstName();
-        String apellido = sessionManager.obtenerLastName();
-        String username = sessionManager.obtenerUsername();
-
-        mostrarDatos(
-                nombre,
-                apellido,
-                username,
-                sessionManager.obtenerEmail(),
-                sessionManager.obtenerRol()
-        );
+    private void mostrarCarga(boolean cargando) {
+        mostrarCarga(cargando, false);
     }
 
-    private void mostrarDatos(String nombre, String apellido, String username,
-                              String email, String rol) {
-
-        // Validamos los datos que nos llegan desde el backend
-        if (nombre.isEmpty()) {
-            nombre = nombre != null ? username : "Nombre";
+    private void mostrarCarga(boolean cargando, boolean bajarAlBoton) {
+        ruedita.setVisibility(cargando ? View.VISIBLE : View.GONE);
+        btnGuardarCambios.setEnabled(!cargando);
+        if (cargando && bajarAlBoton && scrollPerfil != null) {
+            scrollPerfil.post(() -> scrollPerfil.fullScroll(View.FOCUS_DOWN));
         }
-        if (apellido.isEmpty()) {
-            apellido = apellido != null ? username : "Apellido";
-        }
+    }
 
-        // Llenamos los campos correspondientes con los datos que nos llegaron
-        etEditarNombre.setText(nombre);
-        etEditarApellido.setText(apellido);
-        etEditarEmail.setText(email != null && !email.isEmpty() ? email : "Sin email");
-        etEditarUsername.setText(username != null && !username.isEmpty() ? username : "Usuario");
-        tvEditarRol.setText("Rol: " + (rol != null && !rol.isEmpty() ? rol : "Sin rol"));
+    private void precargarDesdeSesion() {
+        tvUsuarioFijo.setText(texto(sessionManager.obtenerUsername()));
+        etEditarNombre.setText(texto(sessionManager.obtenerFirstName()));
+        etEditarApellido.setText(texto(sessionManager.obtenerLastName()));
+        etEditarEmail.setText(texto(sessionManager.obtenerEmail()));
     }
 
     private void cargarPerfilDesdeApi() {
-        findViewById(R.id.rueditaPerfil).setVisibility(View.VISIBLE);
+        mostrarCarga(true);
         authRepository.perfil(new ApiCallback<PerfilResponse>(this) {
 
             @Override
             protected void onSuccess(PerfilResponse body) {
-                findViewById(R.id.rueditaPerfil).setVisibility(View.GONE);
+                mostrarCarga(false);
                 if (isFinishing() || isDestroyed()) {
                     return;
                 }
@@ -109,11 +107,9 @@ public class PerfilEditarActivity extends AppCompatActivity {
                 }
 
                 Usuario usuario = body.getUser();
-                String rol = usuario.getPerfil() == null
-                        ? null
-                        : usuario.getPerfil().getRol();
+                Perfil perfil = usuario.getPerfil();
+                String rol = perfil == null ? null : perfil.getRol();
 
-                // Guardamos los datos actualizados (ahora sí con email)
                 sessionManager.guardarUsuario(
                         usuario.getId(),
                         usuario.getUsername(),
@@ -123,19 +119,20 @@ public class PerfilEditarActivity extends AppCompatActivity {
                         rol
                 );
 
-                mostrarDatos(
-                        usuario.getFirstName(),
-                        usuario.getLastName(),
-                        usuario.getUsername(),
-                        usuario.getEmail(),
-                        rol
+                tvUsuarioFijo.setText(texto(usuario.getUsername()));
+                etEditarNombre.setText(texto(usuario.getFirstName()));
+                etEditarApellido.setText(texto(usuario.getLastName()));
+                etEditarEmail.setText(texto(usuario.getEmail()));
+                etEditarTelefono.setText(perfil == null ? "" : texto(perfil.getTelefono()));
+                etEditarIntereses.setText(perfil == null ? "" : texto(perfil.getInteresesCausas()));
+                etEditarDisponibilidad.setText(
+                        perfil == null ? "" : texto(perfil.getDisponibilidadResumen())
                 );
             }
 
             @Override
             protected void onError(int codigo) {
-                findViewById(R.id.rueditaPerfil).setVisibility(View.GONE);
-                // 401 = sesión vencida o inválida (ApiCallback ya borró la sesión)
+                mostrarCarga(false);
                 if (codigo == 401 && !isFinishing()) {
                     irAlLogin();
                 }
@@ -143,7 +140,7 @@ public class PerfilEditarActivity extends AppCompatActivity {
 
             @Override
             protected void onNetworkError(Throwable t) {
-                findViewById(R.id.rueditaPerfil).setVisibility(View.GONE);
+                mostrarCarga(false);
             }
         });
     }
@@ -151,33 +148,115 @@ public class PerfilEditarActivity extends AppCompatActivity {
     private void guardarDatos() {
         String nombre = valor(etEditarNombre);
         String apellido = valor(etEditarApellido);
-        String username = valor(etEditarUsername);
         String email = valor(etEditarEmail);
+        String telefono = valor(etEditarTelefono);
+        String intereses = valor(etEditarIntereses);
+        String disponibilidad = valor(etEditarDisponibilidad);
+        String passwordActual = valor(etPasswordActual);
+        String passwordNueva = valor(etPasswordNueva);
 
-        if (nombre.isEmpty() || apellido.isEmpty() || username.isEmpty() || email.isEmpty()) {
-            Toast.makeText(this,
-                    "Por favor completa los campos vacios antes de guardar tus cambios.",
-                    Toast.LENGTH_SHORT).show();
+        if (nombre.isEmpty() || apellido.isEmpty() || email.isEmpty()) {
+            Toast.makeText(this, "Completá nombre, apellido y email.", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        if (!Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
+            Toast.makeText(this, "Ingresá un email válido.", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        if (!passwordNueva.isEmpty() && passwordActual.isEmpty()) {
+            Toast.makeText(
+                    this,
+                    "Para cambiar la contraseña indicá la actual.",
+                    Toast.LENGTH_SHORT
+            ).show();
+            return;
+        }
+        if (!passwordNueva.isEmpty() && !esPasswordRobusta(passwordNueva)) {
+            etPasswordNueva.setError(getString(R.string.registro_password_debil));
+            Toast.makeText(this, R.string.registro_password_debil, Toast.LENGTH_LONG).show();
             return;
         }
 
-        // Falta conectar con la API para hacer el recurso PATCH
-        sessionManager.guardarUsuario(
-                sessionManager.obtenerUsuarioId(),
-                username,
+        String password = passwordNueva.isEmpty() ? null : passwordNueva;
+        String passwordActualEnvio = password == null ? null : passwordActual;
+
+        PerfilActualizacionRequest request = new PerfilActualizacionRequest(
                 nombre,
                 apellido,
                 email,
-                sessionManager.obtenerRol()
+                telefono,
+                intereses,
+                disponibilidad,
+                password,
+                passwordActualEnvio
         );
+
+        mostrarCarga(true, true);
+        authRepository.actualizarPerfil(request, new ApiCallback<PerfilResponse>(this) {
+            @Override
+            protected void onSuccess(PerfilResponse body) {
+                if (isFinishing() || isDestroyed()) {
+                    return;
+                }
+                if (body != null && body.getUser() != null) {
+                    Usuario usuario = body.getUser();
+                    Perfil perfil = usuario.getPerfil();
+                    sessionManager.guardarUsuario(
+                            usuario.getId(),
+                            usuario.getUsername(),
+                            usuario.getFirstName(),
+                            usuario.getLastName(),
+                            usuario.getEmail(),
+                            perfil == null ? sessionManager.obtenerRol() : perfil.getRol()
+                    );
+                }
+                Toast.makeText(
+                        PerfilEditarActivity.this,
+                        R.string.perfil_actualizado,
+                        Toast.LENGTH_SHORT
+                ).show();
+                finish();
+            }
+
+            @Override
+            protected void onError(int codigo) {
+                mostrarCarga(false);
+                if (codigo == 401 && !isFinishing()) {
+                    irAlLogin();
+                    return;
+                }
+                Toast.makeText(
+                        PerfilEditarActivity.this,
+                        "No se pudo actualizar el perfil (código " + codigo + ").",
+                        Toast.LENGTH_SHORT
+                ).show();
+            }
+
+            @Override
+            protected void onNetworkError(Throwable t) {
+                mostrarCarga(false);
+                Toast.makeText(
+                        PerfilEditarActivity.this,
+                        "Error de red al guardar el perfil.",
+                        Toast.LENGTH_SHORT
+                ).show();
+            }
+        });
     }
 
-    // Lo mismo que en PerfilActivity
     private void irAlLogin() {
         Intent intent = new Intent(this, LoginActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(intent);
         finish();
+    }
+
+    private static boolean esPasswordRobusta(String password) {
+        return password.length() >= 8
+                && password.matches(".*[A-Z].*")
+                && password.matches(".*[a-z].*")
+                && password.matches(".*\\d.*")
+                && password.matches(".*[^A-Za-z0-9].*");
     }
 
     private static String valor(EditText edit) {

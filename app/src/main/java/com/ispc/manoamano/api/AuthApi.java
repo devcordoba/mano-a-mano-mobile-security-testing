@@ -9,7 +9,9 @@ import com.ispc.manoamano.modelos.PerfilResponse;
 import retrofit2.Call;
 import com.ispc.manoamano.modelos.PerfilActualizacionRequest;
 
+import okhttp3.ResponseBody;
 import retrofit2.http.Body;
+import retrofit2.http.DELETE;
 import retrofit2.http.GET;
 import retrofit2.http.PATCH;
 import retrofit2.http.POST;
@@ -31,6 +33,9 @@ public interface AuthApi {
     Call<PerfilResponse> actualizarPerfil(
             @Body PerfilActualizacionRequest request
     );
+
+    @DELETE("api/auth/perfil/")
+    Call<ResponseBody> eliminarCuenta();
 
     @POST("api/auth/logout/")
     Call<LogoutResponse> logout();

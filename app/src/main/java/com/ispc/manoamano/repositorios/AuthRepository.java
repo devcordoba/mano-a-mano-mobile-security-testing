@@ -11,6 +11,7 @@ import com.ispc.manoamano.modelos.MeResponse;
 import com.ispc.manoamano.modelos.PerfilActualizacionRequest;
 import com.ispc.manoamano.modelos.PerfilResponse;
 
+import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 
@@ -59,6 +60,15 @@ public class AuthRepository {
     ) {
         Call<PerfilResponse> call =
                 authApi.actualizarPerfil(request);
+
+        call.enqueue(callback);
+    }
+
+    public void eliminarCuenta(
+            Callback<ResponseBody> callback
+    ) {
+        Call<ResponseBody> call =
+                authApi.eliminarCuenta();
 
         call.enqueue(callback);
     }
