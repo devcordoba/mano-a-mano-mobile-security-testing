@@ -7,6 +7,7 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.ispc.manoamano.almacenamiento.SessionManager;
@@ -45,9 +46,26 @@ public class PerfilActivity extends AppCompatActivity {
         tvEmail = findViewById(R.id.tvEmail);
         tvRol = findViewById(R.id.tvRol);
         Button btnEditarDatos = findViewById(R.id.btnEditarDatos);
+        Button btnEliminarCuenta = findViewById(R.id.btnEliminarCuenta);
+
+        // Creamos un nuevo Dialog para eliminar cuentas
+        AlertDialog.Builder alertaEliminar = new AlertDialog.Builder(this);
+        alertaEliminar.setTitle(R.string.eliminar_cuenta_titulo);
+        alertaEliminar.setMessage(R.string.eliminar_cuenta_mensaje);
+        alertaEliminar.setPositiveButton(R.string.eliminar_cuenta_ok, (dialog, id) -> {
+            // El usuario elimina su cuenta.
+        });
+        alertaEliminar.setNegativeButton(R.string.eliminar_cuenta_cancelar, (dialog, id) -> {
+            // El usuario cancela.
+        });
+
+        AlertDialog dialog = alertaEliminar.create();
 
         // Hacer click en Editar perfil nos mueve hacia su pantalla
         btnEditarDatos.setOnClickListener(v -> irAEditarPerfil());
+
+        // Hacer click en Eliminar cuenta nos muestra un dialog para confimar/cancelar
+        btnEliminarCuenta.setOnClickListener(v -> dialog.show());
 
         mostrarDatosGuardados();
         cargarPerfilDesdeApi();

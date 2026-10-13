@@ -6,6 +6,7 @@
     <string name="titulo_principal">Encontrá una oportunidad para ayudar</string>
     <string name="buscar">Buscar oportunidades…</string>
     <string name="causa">Causa</string>
+    <string name="perfil">Perfil</string>
     <string name="actividad">Actividad</string>
     <string name="sin_resultados">No se encontraron oportunidades.</string>
     <string name="logo_descripcion">Logo de Mano a Mano</string>
@@ -74,4 +75,12 @@
     <string name="ayuda_porque_titulo">¿Por qué Mano a Mano?</string>
     <string name="ayuda_porque_cuerpo">En Córdoba hay decenas de organizaciones que necesitan voluntarios y cientos de personas dispuestas a ayudar. El problema es que no se encuentran. Mano a Mano existe para resolver exactamente eso: un espacio donde las convocatorias son claras, las postulaciones son simples y la comunicación entre voluntarios y organizaciones ocurre en un mismo lugar.</string>
 
+    <string name="editar_perfil">Editar Perfil</string>
+    <string name="guardar_cambios">Guardar Cambios</string>
+
+    <string name="eliminar_cuenta">Eliminar Cuenta</string>
+    <string name="eliminar_cuenta_titulo">"¿Estás seguro de que querés eliminar tu cuenta?"</string>
+    <string name="eliminar_cuenta_mensaje">Esta accion no se puede deshacer.</string>
+    <string name="eliminar_cuenta_ok">Eliminar</string>
+    <string name="eliminar_cuenta_cancelar">Cancelar</string>
 </resources>
