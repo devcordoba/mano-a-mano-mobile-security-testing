@@ -374,6 +374,14 @@
                     app:backgroundTint="@color/boton_primario_fondo"
                     app:cornerRadius="12dp" />
 
+                <include
+                    android:id="@+id/rueditaContacto"
+                    layout="@layout/ruedita"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginTop="12dp" />
+
             </LinearLayout>
         </LinearLayout>
 
@@ -386,6 +394,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/navbar_background"
+        app:itemIconTint="@color/nav_item"
+        app:itemTextColor="@color/nav_item"
         app:labelVisibilityMode="labeled"
         app:menu="@menu/bottom_navigation_menu" />
 

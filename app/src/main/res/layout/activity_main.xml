@@ -36,10 +36,14 @@
                 android:scaleType="fitCenter"
                 android:src="@drawable/logo" />
 
-            <View
+            <LinearLayout
                 android:layout_width="0dp"
-                android:layout_height="1dp"
-                android:layout_weight="1" />
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center">
+
+                <include layout="@layout/barra_volver" />
+            </LinearLayout>
 
             <TextView
                 android:id="@+id/tvIniciarSesion"
@@ -88,20 +92,12 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:text="Buscar"
-            android:textColor="@color/text_secondary"
-            android:textSize="13sp"
-            android:textStyle="bold" />
-
         <EditText
             android:id="@+id/editBuscar"
             android:layout_width="match_parent"
             android:layout_height="40dp"
-            android:layout_marginTop="4dp"
+            android:layout_marginTop="12dp"
+            android:layout_marginBottom="12dp"
             android:background="@drawable/input_background"
             android:gravity="center_vertical"
             android:hint="@string/buscar"
@@ -116,7 +112,7 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="6dp"
+            android:layout_marginTop="4dp"
             android:baselineAligned="false"
             android:orientation="horizontal">
 
@@ -132,13 +128,13 @@
                     android:layout_height="wrap_content"
                     android:text="@string/causa"
                     android:textColor="@color/text_secondary"
-                    android:textSize="13sp"
+                    android:textSize="12sp"
                     android:textStyle="bold" />
 
                 <Spinner
                     android:id="@+id/spinnerCausa"
                     android:layout_width="match_parent"
-                    android:layout_height="38dp"
+                    android:layout_height="40dp"
                     android:background="@drawable/input_background"
                     android:paddingStart="6dp"
                     android:paddingEnd="6dp" />
@@ -156,13 +152,13 @@
                     android:layout_height="wrap_content"
                     android:text="@string/actividad"
                     android:textColor="@color/text_secondary"
-                    android:textSize="13sp"
+                    android:textSize="12sp"
                     android:textStyle="bold" />
 
                 <Spinner
                     android:id="@+id/spinnerActividad"
                     android:layout_width="match_parent"
-                    android:layout_height="38dp"
+                    android:layout_height="40dp"
                     android:background="@drawable/input_background"
                     android:paddingStart="6dp"
                     android:paddingEnd="6dp" />
@@ -205,7 +201,7 @@
             android:clickable="true"
             android:focusable="true"
             android:gravity="center"
-            android:minHeight="40dp"
+            android:minHeight="48dp"
             android:paddingStart="8dp"
             android:paddingTop="8dp"
             android:paddingEnd="8dp"
@@ -225,7 +221,7 @@
             android:clickable="true"
             android:focusable="true"
             android:gravity="center"
-            android:minHeight="40dp"
+            android:minHeight="48dp"
             android:paddingStart="8dp"
             android:paddingTop="8dp"
             android:paddingEnd="8dp"
@@ -294,6 +290,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/white"
+        app:itemIconTint="@color/nav_item"
+        app:itemTextColor="@color/nav_item"
         app:labelVisibilityMode="labeled"
         app:menu="@menu/bottom_navigation_menu" />
 

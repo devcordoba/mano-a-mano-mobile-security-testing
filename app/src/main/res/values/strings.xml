@@ -26,6 +26,7 @@
     <string name="login_hint_password">Contraseña</string>
     <string name="login_boton">INGRESAR</string>
     <string name="login_campos_vacios">Por favor, complete todos los campos.</string>
+    <string name="login_credenciales_invalidas">Usuario y/o contraseña incorrecta.</string>
     <string name="login_sin_cuenta">¿No tenés cuenta? Registrate</string>
 
     <string name="contacto_titulo">Contacto</string>
@@ -46,6 +47,7 @@
     <string name="registro_subtitulo">Gratis. Sin complicaciones.</string>
     <string name="registro_titulo">Crear cuenta</string>
     <string name="registro_campos_vacios">Por favor, completá todos los campos.</string>
+    <string name="registro_password_debil">La contraseña debe tener mínimo 8 caracteres, una mayúscula, una minúscula, un número y un símbolo.</string>
 
     <string name="mensajes_responder">Responder</string>
     <string name="mensajes_de">De: %1$s</string>

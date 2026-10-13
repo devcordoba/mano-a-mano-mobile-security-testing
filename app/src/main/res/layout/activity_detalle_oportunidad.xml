@@ -63,7 +63,7 @@
                     android:paddingHorizontal="12dp"
                     android:paddingVertical="6dp"
                     android:textColor="@color/tag_texto"
-                    android:textSize="12sp"
+                    android:textSize="13sp"
                     android:textStyle="bold" />
 
                 <TextView
@@ -75,7 +75,7 @@
                     android:paddingHorizontal="12dp"
                     android:paddingVertical="6dp"
                     android:textColor="@color/primary"
-                    android:textSize="12sp"
+                    android:textSize="13sp"
                     android:textStyle="bold" />
             </LinearLayout>
 
