@@ -77,12 +77,31 @@
     <string name="ayuda_porque_titulo">¿Por qué Mano a Mano?</string>
     <string name="ayuda_porque_cuerpo">En Córdoba hay decenas de organizaciones que necesitan voluntarios y cientos de personas dispuestas a ayudar. El problema es que no se encuentran. Mano a Mano existe para resolver exactamente eso: un espacio donde las convocatorias son claras, las postulaciones son simples y la comunicación entre voluntarios y organizaciones ocurre en un mismo lugar.</string>
 
-    <string name="editar_perfil">Editar Perfil</string>
-    <string name="guardar_cambios">Guardar Cambios</string>
+    <string name="editar_perfil">Editar perfil</string>
+    <string name="guardar_cambios">Guardar cambios</string>
+    <string name="perfil_subtitulo">Tus datos personales y preferencias en Mano a Mano.</string>
+    <string name="perfil_seccion_cuenta">Datos de la cuenta</string>
+    <string name="perfil_seccion_preferencias">Preferencias</string>
+    <string name="perfil_seccion_seguridad">Seguridad</string>
+    <string name="perfil_usuario_fijo">Usuario (no se puede cambiar)</string>
+    <string name="perfil_hint_nombre">Nombre</string>
+    <string name="perfil_hint_apellido">Apellido</string>
+    <string name="perfil_hint_email">Email</string>
+    <string name="perfil_hint_telefono">Teléfono</string>
+    <string name="perfil_hint_intereses">Intereses / causas</string>
+    <string name="perfil_hint_disponibilidad">Disponibilidad</string>
+    <string name="perfil_hint_password_actual">Contraseña actual</string>
+    <string name="perfil_hint_password_nueva">Nueva contraseña (opcional)</string>
+    <string name="perfil_nota_sin_rol">El nombre de usuario no se puede modificar.</string>
+    <string name="perfil_sin_telefono">Sin teléfono</string>
+    <string name="perfil_sin_intereses">Sin intereses cargados</string>
+    <string name="perfil_sin_disponibilidad">Sin disponibilidad cargada</string>
+    <string name="perfil_actualizado">Perfil actualizado correctamente.</string>
+    <string name="perfil_cuenta_eliminada">Tu cuenta fue eliminada. Se cerró la sesión.</string>
 
-    <string name="eliminar_cuenta">Eliminar Cuenta</string>
-    <string name="eliminar_cuenta_titulo">"¿Estás seguro de que querés eliminar tu cuenta?"</string>
-    <string name="eliminar_cuenta_mensaje">Esta accion no se puede deshacer.</string>
-    <string name="eliminar_cuenta_ok">Eliminar</string>
+    <string name="eliminar_cuenta">Eliminar cuenta</string>
+    <string name="eliminar_cuenta_titulo">¿Eliminar tu cuenta de Mano a Mano?</string>
+    <string name="eliminar_cuenta_mensaje">Esta acción es permanente y no se puede deshacer.\n\nAl confirmar se eliminará:\n• Tu usuario y datos personales\n• Tus postulaciones enviadas o recibidas\n• Tus mensajes\n• Si sos organización: tus organizaciones y las oportunidades publicadas\n\nTambién se cerrará tu sesión en este dispositivo.</string>
+    <string name="eliminar_cuenta_ok">Sí, eliminar mi cuenta</string>
     <string name="eliminar_cuenta_cancelar">Cancelar</string>
 </resources>
