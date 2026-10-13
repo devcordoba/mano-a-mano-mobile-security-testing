@@ -8,6 +8,7 @@ import com.ispc.manoamano.modelos.LoginRequest;
 import com.ispc.manoamano.modelos.LoginResponse;
 import com.ispc.manoamano.modelos.LogoutResponse;
 import com.ispc.manoamano.modelos.MeResponse;
+import com.ispc.manoamano.modelos.PerfilActualizacionRequest;
 import com.ispc.manoamano.modelos.PerfilResponse;
 
 import retrofit2.Call;
@@ -48,6 +49,16 @@ public class AuthRepository {
     ) {
         Call<PerfilResponse> call =
                 authApi.perfil();
+
+        call.enqueue(callback);
+    }
+
+    public void actualizarPerfil(
+            PerfilActualizacionRequest request,
+            Callback<PerfilResponse> callback
+    ) {
+        Call<PerfilResponse> call =
+                authApi.actualizarPerfil(request);
 
         call.enqueue(callback);
     }

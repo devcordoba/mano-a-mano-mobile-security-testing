@@ -7,8 +7,11 @@ import com.ispc.manoamano.modelos.MeResponse;
 import com.ispc.manoamano.modelos.PerfilResponse;
 
 import retrofit2.Call;
+import com.ispc.manoamano.modelos.PerfilActualizacionRequest;
+
 import retrofit2.http.Body;
 import retrofit2.http.GET;
+import retrofit2.http.PATCH;
 import retrofit2.http.POST;
 
 public interface AuthApi {
@@ -23,6 +26,11 @@ public interface AuthApi {
 
     @GET("api/auth/perfil/")
     Call<PerfilResponse> perfil();
+
+    @PATCH("api/auth/perfil/")
+    Call<PerfilResponse> actualizarPerfil(
+            @Body PerfilActualizacionRequest request
+    );
 
     @POST("api/auth/logout/")
     Call<LogoutResponse> logout();
