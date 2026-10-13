@@ -127,6 +127,8 @@
         android:padding="8dp"
         android:text="@string/login_sin_cuenta"
         android:textColor="@color/primary"
-        android:textSize="14sp" />
+        android:textSize="14sp"
+        android:minHeight="48dp"
+        android:gravity="center" />
 
 </LinearLayout>

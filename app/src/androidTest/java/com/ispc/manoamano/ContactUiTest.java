@@ -19,6 +19,7 @@ import static androidx.test.espresso.action.ViewActions.typeText;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
+import static androidx.test.espresso.action.ViewActions.scrollTo;
 
 @RunWith(AndroidJUnit4.class)
 @LargeTest
@@ -43,7 +44,7 @@ public class ContactUiTest {
         try (ActivityScenario<ContactActivity> ignored =
                      ActivityScenario.launch(ContactActivity.class)) {
             ContactScreen.assertVisible();
-            onView(withId(R.id.btnContactanos)).perform(click());
+            onView(withId(R.id.btnContactanos)).perform(scrollTo(), click());
             onView(withId(R.id.editNombreContacto))
                     .perform(typeText("Equipo QA"), closeSoftKeyboard());
             onView(withId(R.id.editEmailContacto))
