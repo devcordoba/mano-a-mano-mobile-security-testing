@@ -1,0 +1,15 @@
+AUT-SYS-01 - Justificación (UI Automator: no aplica en este sprint)
+
+El AndroidManifest.xml declara únicamente el permiso INTERNET. La app no usa cámara,
+ubicación ni notificaciones, por lo que no existen diálogos de permisos del sistema ni
+interacción con otras aplicaciones que UI Automator permita probar.
+
+La app declara <queries> para mailto y tel solo para abrir el correo o el teléfono desde la
+pantalla de Contacto. Esa acción la resuelve otra aplicación, fuera del control de la app.
+
+Decisión: no se automatiza UI Automator en este sprint. Los flujos dentro de la app se cubren
+con Espresso (AUT-UI). La acción de abrir correo o teléfono desde Contacto se valida de forma
+manual (caso TC-10 de la planilla).
+
+Si en una versión futura se agregan permisos en tiempo de ejecución, se incorporará un flujo
+AUT-SYS con un Screen Object para el diálogo de permisos.
