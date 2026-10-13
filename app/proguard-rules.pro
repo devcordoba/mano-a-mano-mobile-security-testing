@@ -19,3 +19,7 @@
 # If you keep the line number information, uncomment this to
 # hide the original source file name.
 #-renamesourcefileattribute SourceFile
+# Los DTO se deserializan mediante reflexión de Gson.
+-keepattributes Signature,*Annotation*
+-keep class com.ispc.manoamano.modelos.** { *; }
+-keep interface com.ispc.manoamano.api.** { *; }

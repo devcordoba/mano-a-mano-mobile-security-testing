@@ -25,5 +25,15 @@
         android:textSize="17sp"
         android:textStyle="normal" />
 
+    <include
+        android:id="@+id/rueditaSplash"
+        layout="@layout/ruedita"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:layout_below="@id/app_slogan"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="48dp"
+        android:visibility="visible" />
+
 </RelativeLayout>
 
