@@ -39,7 +39,6 @@ El incremento del **Sprint 2** integra la app con la **API REST** (Django), aute
 - Wiki Home (ceremonias Sprint 1 y 2): https://github.com/devcordoba/mano-a-mano-mobile-security-testing/wiki
 - Testing: https://github.com/devcordoba/mano-a-mano-mobile-security-testing/wiki/Testing
 - Ciberseguridad: https://github.com/devcordoba/mano-a-mano-mobile-security-testing/wiki/Ciberseguridad
-- Accesibilidad: https://github.com/devcordoba/mano-a-mano-mobile-security-testing/wiki/Accesibilidad
 - IEEE 830: https://github.com/devcordoba/mano-a-mano-mobile-security-testing/wiki/Documento-IEEE-830
 - Capturas: https://drive.google.com/drive/folders/1YjRzEcMS7n03S60pWMc-MJunL5j6ramy?usp=sharing
 - Milestone Sprint 2: https://github.com/devcordoba/mano-a-mano-mobile-security-testing/milestone/2
