@@ -618,6 +618,10 @@ public class MainActivity extends AppCompatActivity {
         btnModoOrganizacion = findViewById(R.id.btnModoOrganizacion);
         tvTituloPrincipal = findViewById(R.id.tvTituloPrincipal);
 
+        View btnVolver = findViewById(R.id.btnVolver);
+        btnVolver.setVisibility(View.GONE);
+        btnVolver.setOnClickListener(v -> mostrarModo(MODO_EXPLORAR));
+
         View grupoModo = findViewById(R.id.grupoModo);
         if (!sessionManager.tieneSesion()) {
             grupoModo.setVisibility(View.GONE);
@@ -635,6 +639,7 @@ public class MainActivity extends AppCompatActivity {
         findViewById(R.id.grupoExplorar).setVisibility(explorar ? View.VISIBLE : View.GONE);
         findViewById(R.id.grupoLista).setVisibility(explorar ? View.VISIBLE : View.GONE);
         tvTituloPrincipal.setVisibility(explorar ? View.VISIBLE : View.GONE);
+        findViewById(R.id.btnVolver).setVisibility(explorar ? View.GONE : View.VISIBLE);
         findViewById(R.id.panelUsuario).setVisibility(modo == MODO_USUARIO ? View.VISIBLE : View.GONE);
         findViewById(R.id.panelOrganizacion).setVisibility(
                 modo == MODO_ORGANIZACION ? View.VISIBLE : View.GONE

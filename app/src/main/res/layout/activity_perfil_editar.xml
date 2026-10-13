@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/linearLayout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingStart="8dp"
+    android:paddingTop="8dp"
+    android:paddingEnd="24dp"
+    android:paddingBottom="24dp"
+    android:background="@color/background">
+
+    <include layout="@layout/barra_volver" />
+
+    <TextView
+        android:id="@+id/textView2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="54dp"
+        android:text="@string/editar_perfil"
+        android:textColor="@color/primary"
+        android:textSize="28sp"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <EditText
+        android:id="@+id/etEditarNombre"
+        android:layout_width="320dp"
+        android:layout_height="60dp"
+        android:layout_marginHorizontal="36dp"
+        android:layout_marginTop="72dp"
+        android:autofillHints="name"
+        android:ems="10"
+        android:hint="Editar Nombre"
+        android:inputType="text"
+        android:textColorHint="@color/text_primary"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView2" />
+
+    <EditText
+        android:id="@+id/etEditarApellido"
+        android:layout_width="320dp"
+        android:layout_height="60dp"
+        android:layout_marginHorizontal="36dp"
+        android:layout_marginTop="12dp"
+        android:autofillHints="name"
+        android:ems="10"
+        android:hint="Editar Apellido"
+        android:inputType="text"
+        android:textColorHint="@color/text_primary"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/etEditarNombre" />
+
+    <EditText
+        android:id="@+id/etEditarUsername"
+        android:layout_width="320dp"
+        android:layout_height="60dp"
+        android:layout_marginHorizontal="36dp"
+        android:layout_marginTop="12dp"
+        android:ems="10"
+        android:inputType="text"
+        android:textColorHint="@color/text_primary"
+        android:autofillHints="username"
+        android:hint="Editar Nombre de usuario"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/etEditarApellido" />
+
+    <EditText
+        android:id="@+id/etEditarEmail"
+        android:layout_width="320dp"
+        android:layout_height="60dp"
+        android:layout_marginHorizontal="36dp"
+        android:layout_marginTop="12dp"
+        android:ems="10"
+        android:inputType="textEmailAddress"
+        android:textColorHint="@color/text_primary"
+        android:hint="Editar Email"
+        android:autofillHints="emailAddress"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/etEditarUsername" />
+
+    <include
+        android:id="@+id/rueditaPerfil"
+        layout="@layout/ruedita"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:layout_gravity="center_horizontal"
+        android:visibility="visible"
+        app:layout_constraintBottom_toTopOf="@+id/etEditarNombre"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView2" />
+
+    <Button
+        android:id="@+id/btnGuardarCambios"
+        android:layout_width="320dp"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="36dp"
+        android:backgroundTint="@color/primary"
+        android:text="@string/guardar_cambios"
+        android:textColor="@color/white"
+        android:textSize="24sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tvEditarRol" />
+
+    <TextView
+        android:id="@+id/tvEditarRol"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        android:text="Rol: Rol"
+        android:textColor="@color/primary"
+        android:textSize="20sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/etEditarEmail" />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>
