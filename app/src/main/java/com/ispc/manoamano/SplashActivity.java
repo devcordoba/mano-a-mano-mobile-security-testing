@@ -37,6 +37,11 @@ public class SplashActivity extends AppCompatActivity {
 
     private void validarSesionYAbrir() {
         SessionManager sessionManager = new SessionManager(this);
+        if (sessionManager.tieneSesion() && !sessionManager.mantieneSesion()) {
+            sessionManager.cerrarSesion();
+            abrirLogin();
+            return;
+        }
         if (!sessionManager.tieneSesion()) {
             abrirPrincipal();
             return;
@@ -77,6 +82,12 @@ public class SplashActivity extends AppCompatActivity {
 
     private void abrirPrincipal() {
         Intent intent = new Intent(SplashActivity.this, MainActivity.class);
+        startActivity(intent);
+        finish();
+    }
+
+    private void abrirLogin() {
+        Intent intent = new Intent(SplashActivity.this, LoginActivity.class);
         startActivity(intent);
         finish();
     }

@@ -14,6 +14,7 @@ public class SessionManager {
     private static final String LAST_NAME = "last_name";
     private static final String EMAIL = "email";
     private static final String ROL = "rol";
+    private static final String MANTENER_SESION = "mantener_sesion";
 
     private final SharedPreferences preferences;
 
@@ -42,6 +43,16 @@ public class SessionManager {
         String token = obtenerToken();
 
         return token != null && !token.isEmpty();
+    }
+
+    public void guardarMantenerSesion(boolean mantener) {
+        preferences.edit()
+                .putBoolean(MANTENER_SESION, mantener)
+                .apply();
+    }
+
+    public boolean mantieneSesion() {
+        return preferences.getBoolean(MANTENER_SESION, false);
     }
 
     // ==========================================

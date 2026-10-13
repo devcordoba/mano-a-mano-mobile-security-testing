@@ -104,6 +104,24 @@ public class SessionManagerTest {
     }
 
     @Test
+    public void mantenerSesion_quedaDesactivadaSiNoSePide() {
+        sessionManager.guardarToken("abc.def.ghi");
+
+        assertFalse(sessionManager.mantieneSesion());
+    }
+
+    @Test
+    public void guardarMantenerSesion_laRecuerdaYCerrarSesionLaBorra() {
+        sessionManager.guardarMantenerSesion(true);
+
+        assertTrue(sessionManager.mantieneSesion());
+
+        sessionManager.cerrarSesion();
+
+        assertFalse(sessionManager.mantieneSesion());
+    }
+
+    @Test
     public void sesionPersiste_alCrearOtroSessionManagerConElMismoContexto() {
         sessionManager.guardarToken("abc.def.ghi");
 
@@ -153,7 +171,7 @@ public class SessionManagerTest {
 
         @Override
         public boolean getBoolean(String key, boolean defValue) {
-            return defValue;
+            return datos.containsKey(key) ? (Boolean) datos.get(key) : defValue;
         }
 
         @Override
@@ -210,6 +228,7 @@ public class SessionManagerTest {
 
             @Override
             public Editor putBoolean(String key, boolean value) {
+                pendientes.put(key, value);
                 return this;
             }
 
