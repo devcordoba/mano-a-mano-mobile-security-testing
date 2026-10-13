@@ -78,26 +78,8 @@ public class OportunidadAdapter
                 oportunidad.getCausa() == null ? "" : oportunidad.getCausa().getNombre()
         );
 
-        holder.textActividad.setText(
-                oportunidad.getTipoActividad() == null ? "" : oportunidad.getTipoActividad().getNombre()
-        );
-
-        holder.textDisponibilidad.setText(
-                oportunidad.getDisponibilidad()
-        );
-
-        holder.textCuposFecha.setText(
-                holder.itemView
-                        .getContext()
-                        .getString(
-                                R.string.cupos_y_fecha,
-                                oportunidad.getCupos(),
-                                oportunidad.getFechaActividad()
-                        )
-        );
-
-        holder.textResumen.setText(
-                oportunidad.getResumen()
+        holder.textFecha.setText(
+                formatearFecha(oportunidad.getFechaActividad())
         );
 
         holder.itemView.setOnClickListener(v -> {
@@ -122,6 +104,22 @@ public class OportunidadAdapter
         return oportunidades.size();
     }
 
+    // La API manda "2026-11-08"; en la tarjeta alcanza con "08/11".
+    private String formatearFecha(String fecha) {
+
+        if (fecha == null) {
+            return "";
+        }
+
+        String[] partes = fecha.split("-");
+
+        if (partes.length != 3) {
+            return fecha;
+        }
+
+        return partes[2] + "/" + partes[1];
+    }
+
     static class OportunidadViewHolder
             extends RecyclerView.ViewHolder {
 
@@ -131,10 +129,7 @@ public class OportunidadAdapter
         final TextView textOrganizacion;
         final TextView textUbicacion;
         final TextView textCausa;
-        final TextView textActividad;
-        final TextView textDisponibilidad;
-        final TextView textCuposFecha;
-        final TextView textResumen;
+        final TextView textFecha;
 
         OportunidadViewHolder(
                 @NonNull View itemView
@@ -167,24 +162,9 @@ public class OportunidadAdapter
                             R.id.textCausa
                     );
 
-            textActividad =
+            textFecha =
                     itemView.findViewById(
-                            R.id.textActividad
-                    );
-
-            textDisponibilidad =
-                    itemView.findViewById(
-                            R.id.textDisponibilidad
-                    );
-
-            textCuposFecha =
-                    itemView.findViewById(
-                            R.id.textCuposFecha
-                    );
-
-            textResumen =
-                    itemView.findViewById(
-                            R.id.textResumen
+                            R.id.textFecha
                     );
         }
     }
