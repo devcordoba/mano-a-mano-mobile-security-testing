@@ -19,6 +19,7 @@ import com.ispc.manoamano.modelos.ContactoResponse;
 import com.ispc.manoamano.repositorios.ContactoRepository;
 import com.ispc.manoamano.utilidades.HttpErrorHandler;
 import com.ispc.manoamano.utilidades.NavegacionMensajes; // NUEVO (1)
+import com.ispc.manoamano.utilidades.NavegacionHelper;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -120,8 +121,7 @@ public class ContactActivity extends AppCompatActivity {
             }
 
             if (item.getItemId() == R.id.nav_inicio) {
-                Intent intent = new Intent(this, MainActivity.class);
-                startActivity(intent);
+                NavegacionHelper.irA(this, MainActivity.class);
                 finish();
                 return true;
             }
@@ -131,8 +131,7 @@ public class ContactActivity extends AppCompatActivity {
             }
 
             if (item.getItemId() == R.id.nav_perfil) {
-                Intent intent = new Intent(this, PerfilActivity.class);
-                startActivity(intent);
+                NavegacionHelper.irA(this, PerfilActivity.class);
                 return true;
             }
 

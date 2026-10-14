@@ -38,6 +38,7 @@ import com.ispc.manoamano.repositorios.TipoActividadRepository;
 import com.ispc.manoamano.utilidades.ApiCallback;
 import com.ispc.manoamano.modelos.LogoutResponse;
 import com.ispc.manoamano.utilidades.NavegacionMensajes;
+import com.ispc.manoamano.utilidades.NavegacionHelper;
 
 
 import java.util.ArrayList;
@@ -581,24 +582,12 @@ public class MainActivity extends AppCompatActivity {
             }
 
             if (id == R.id.nav_contacto) {
-
-                Intent intent = new Intent(
-                        MainActivity.this,
-                        ContactActivity.class
-                );
-
-                startActivity(intent);
+                NavegacionHelper.irA(MainActivity.this, ContactActivity.class);
                 return true;
             }
 
             if (id == R.id.nav_perfil) {
-
-                Intent intent = new Intent(
-                        MainActivity.this,
-                        PerfilActivity.class
-                );
-
-                startActivity(intent);
+                NavegacionHelper.irA(MainActivity.this, PerfilActivity.class);
                 return true;
             }
 
